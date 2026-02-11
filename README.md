@@ -8,6 +8,13 @@ To make it easy for you to get started with GitLab, here's a list of recommended
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
+## Development System Requirements
+
+For working on our Next.js Frontend euterpes-notes:
+
+1. Minimum Node.js version: 20.9+ (found here: https://nodejs.org/en/download)
+2. Operating systems: macOS, Windows (including WSL, docs found here: https://learn.microsoft.com/en-us/windows/wsl/), and Linux.
+
 ## Clone Repository
 
 To get this GitLab repo on your local machine, navigate to a folder you want to put the git repo in (we'll call it "folder_where_you_put_projects"), open some terminal in the "folder_where_you_put_projects" folder (Powershell, Command Prompt, Bash, etc. will work), and execute the following command:
@@ -19,6 +26,17 @@ git clone https://gitlab.com/cs-department-ecu/csci-4230-spring-2026/music-shari
 A pop-up may open from GitLab that asks you to authenicate, choose your perferred method (Web Browser, Token, or Password). Afterwards the command can access GitLab.
 
 Doing this will create a subdirectory called "music-sharing-social-media" within the "folder_where_you_put_projects" directory. Inside of "music-sharing-social-media" you'll find the project like it is on GitLab and a hidden .git file. You can now contribute!
+
+## Installing Node Dependencies
+
+Because of our current GitIgnore policy, certain intermediate/compiled files and Node.js packages are prevented from being tracked by Git (See euterpes-notes/.gitignore for details). To install the needed dependencies for our Next.js frontend, execute the following command:
+
+```
+cd euterpes-notes
+npm install
+```
+
+npm comes pre-intalled with Node.js, and running the above commands causes npm to search the euterpes-notes/package.json file for packages to install. It installs these packages into a new "node_modules" folder (at euterpes-notes/node_modules).
 
 ## Switching Branches, Branching Out, and Finding Branches
 
@@ -64,9 +82,9 @@ Doing this will upload (AKA push) any changes committed on your local machine on
 
 ## Merging your Completed Changes onto the Main Branch
 
-Once you have an entire feature/task pushed onto your branch on GitLab (we'll call it "your_branch"), you want to place it in the "main" branch where our finished web app resides. To do so do thd following steps (things enclosed in <> need to be replaced):
+Once you have an entire feature/task pushed onto your branch on GitLab (we'll call it "your_branch"), you want to place it in the "main" branch where our finished web app resides. To do so complete the following steps (things enclosed in <> need to be replaced):
 
-1. Some Pre-Merge checks to ensure both branches are up to date individually (pulling their GitLab content down to your local machine):
+1. Do some pre-merge checks to ensure both branches are up to date individually (pulling their GitLab content down to your local machine):
 ```
 git checkout main    
 git pull origin main  
@@ -87,7 +105,7 @@ Doing so will prompt Git to compare the files in your_branch and the main branch
 
 3. Resolving merge conflicts
 
-First, open the file that is causing the conflict. Git will add dividers into the file where conflicts are and label which changes come from which branch. Remove the changes you don't want and the dividers, then use the following command:
+First, open the file that is causing the conflict. Git will add dividers into the file where conflicts are and label which changes come from which branch. Remove the changes you don't want as well as the dividers, then use the following command:
 
 ```
 git add <file_name>
