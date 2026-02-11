@@ -8,6 +8,18 @@ To make it easy for you to get started with GitLab, here's a list of recommended
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
+## Clone Repository
+
+To get this GitLab repo on your local machine, navigate to a folder you want to put the git repo in (we'll call it "folder_where_you_put_projects"), open some terminal in the "folder_where_you_put_projects" folder (Powershell, Command Prompt, Bash, etc. will work), and execute the following command:
+
+```
+git clone https://gitlab.com/cs-department-ecu/csci-4230-spring-2026/music-sharing-social-media/music-sharing-social-media.git
+```
+
+A pop-up may open from GitLab that asks you to authenicate, choose your perferred method (Web Browser, Token, or Password). Afterwards the command can access GitLab.
+
+Doing this will create a subdirectory called "music-sharing-social-media" within the "folder_where_you_put_projects" directory. Inside of "music-sharing-social-media" you'll find the project like it is on GitLab and a hidden .git file. You can now contribute!
+
 ## Add your files
 
 * [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
