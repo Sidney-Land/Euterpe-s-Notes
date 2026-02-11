@@ -20,6 +20,92 @@ A pop-up may open from GitLab that asks you to authenicate, choose your perferre
 
 Doing this will create a subdirectory called "music-sharing-social-media" within the "folder_where_you_put_projects" directory. Inside of "music-sharing-social-media" you'll find the project like it is on GitLab and a hidden .git file. You can now contribute!
 
+## Switching Branches, Branching Out, and Finding Branches
+
+To create the branches required for us to not code over each other, you have to make new branches. To do so, first navigate to an existing branch you want to split off from (for example, our default branch "main") using the following command (things enclosed in <> need to be replaced):
+
+```
+git checkout <name_of_parent_branch>
+```
+
+Then, create your new branch with the following command:
+
+```
+git checkout -b <name_of_new_child_branch>
+```
+
+Doing this will place you in the your new branch, where you can make changes by yourself.
+
+If you want to see a list of the project's branches, use the following command:
+
+```
+git branch
+```
+
+## Getting Changes from Remote (GitLab)
+
+You'll want to check if the branch you are working on has changed on GitLab, especially if you are working with someone else on the same branch. To do so, execute the following command regularly: 
+
+```
+git fetch
+```
+
+Doing this will download (AKA fetch) any changes made to your branch by other people onto your local machine.
+
+## Adding your Changes to the Remote (GitLab)
+
+Once you've made 1 or more commits, for them to be present on GitLab you need to execute the following command:
+
+```
+git push
+```
+
+Doing this will upload (AKA push) any changes committed on your local machine onto your current branch on GitLab.
+
+## Merging your Completed Changes onto the Main Branch
+
+Once you have an entire feature/task pushed onto your branch on GitLab (we'll call it "your_branch"), you want to place it in the "main" branch where our finished web app resides. To do so do thd following steps (things enclosed in <> need to be replaced):
+
+1. Some Pre-Merge checks to ensure both branches are up to date individually (pulling their GitLab content down to your local machine):
+```
+git checkout main    
+git pull origin main  
+
+git checkout <your_branch>   
+git pull origin <your_branch>
+```
+
+Here, "origin" is Git's shorthand for our GitLab repo's URL.
+
+2. Navigate to the main branch and perfrom the merge
+```
+git checkout main  
+git merge <your_branch>
+```
+
+Doing so will prompt Git to compare the files in your_branch and the main branch, and will attempt to add files from your_branch onto main automatically. If any file is changed by both branches, there will be a merge conflict. If no merge conflict emerges, skip Step 3.
+
+3. Resolving merge conflicts
+
+First, open the file that is causing the conflict. Git will add dividers into the file where conflicts are and label which changes come from which branch. Remove the changes you don't want and the dividers, then use the following command:
+
+```
+git add <file_name>
+```
+
+Doing so tells Git that you resolved the conflict.
+
+4. Commit and push the merged main branch
+
+Now you have a version of the main branch with your_branch's feature in it, now commit it and push it to the main branch on GitLab with the following commands (just like you would any other change):
+
+```
+git commit -m "Merge branch <your_branch> into main"
+git push
+```
+
+## ---Below is Default GitLab README Content that may be Useful Later---
+
 ## Add your files
 
 * [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
