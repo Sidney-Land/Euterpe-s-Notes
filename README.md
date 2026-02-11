@@ -38,6 +38,17 @@ npm install
 
 npm comes pre-intalled with Node.js, and running the above commands causes npm to search the euterpes-notes/package.json file for packages to install. It installs these packages into a new "node_modules" folder (at euterpes-notes/node_modules).
 
+## Spinning up a Development Server
+
+If you are performing manual frontend tests or if you just want to see what our web app looks like at any point, then execute the following commands:
+
+```
+cd euterpes-notes
+npm run dev
+```
+
+Doing this will host the version of the website that is on your local machine, and it can be found at http://localhost:3000 by default. To stop the dev server, simply press 'Ctrl+C'.
+
 ## Switching Branches, Branching Out, and Finding Branches
 
 To create the branches required for us to not code over each other, you have to make new branches. To do so, first navigate to an existing branch you want to split off from (for example, our default branch "main") using the following command (things enclosed in <> need to be replaced):
