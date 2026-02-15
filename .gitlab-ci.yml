@@ -17,7 +17,7 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 variables:
-  FRONTEND_PATH: /euterpes-notes
+  FRONTEND_PATH: euterpes-notes
 
 image: node:24-alpine # Ensures Node.js 24 is present for entire pipeline, ran on the small Linux distro Alpine
 
@@ -35,7 +35,6 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - ls -a
     - echo "Compiling the code..."
     - echo "TODO"
 
@@ -47,8 +46,7 @@ frontend-packages-job:       # This job runs in the build stage, which runs firs
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
-  script:
-    - ls -a  
+  script: 
     - echo "Running unit tests..."
     - echo "TODO"
 
@@ -63,6 +61,5 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - ls -a
     - echo "Deploying application..."
     - echo "TODO"
