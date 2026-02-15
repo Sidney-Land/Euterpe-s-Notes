@@ -17,7 +17,7 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 variables:
-  FRONTEND_PATH: euterpes-notes
+  FRONTEND_PATH: ./euterpes-notes
 
 image: node:24-alpine # Ensures Node.js 24 is present for entire pipeline, ran on the small Linux distro Alpine
 
