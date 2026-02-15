@@ -19,7 +19,13 @@
 variables:
   FRONTEND_PATH: \euterpes-notes
 
-image: node:24-alpine
+image: node:24-alpine # Ensures Node.js 24 is present for entire pipeline, ran on the small Linux distro Alpine
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .next/cache/
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -28,10 +34,14 @@ stages:          # List of stages for jobs, and their order of execution
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
-
   script:
     - echo "Compiling the code..."
     - echo "TODO"
+
+frontend-packages-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - npm ci
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -42,6 +52,7 @@ unit-test-job:   # This job runs in the test stage.
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
+    - cd $FRONTEND_PATH
     - echo "Linting code..."
     - npm run lint
 
