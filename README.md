@@ -23,7 +23,7 @@ To get this GitLab repo on your local machine, navigate to a folder you want to 
 git clone https://gitlab.com/cs-department-ecu/csci-4230-spring-2026/music-sharing-social-media/music-sharing-social-media.git
 ```
 
-A pop-up may open from GitLab that asks you to authenicate, choose your perferred method (Web Browser, Token, or Password). Afterwards the command can access GitLab.
+A pop-up may open from GitLab that asks you to authenticate, choose your preferred method (Web Browser, Token, or Password). Afterwards the command can access GitLab.
 
 Doing this will create a subdirectory called "music-sharing-social-media" within the "folder_where_you_put_projects" directory. Inside of "music-sharing-social-media" you'll find the project like it is on GitLab and a hidden .git file. You can now contribute!
 
@@ -83,7 +83,15 @@ Doing this will download (AKA fetch) any changes made to your branch by other pe
 
 ## Adding your Changes to the Remote (GitLab)
 
-Once you've made 1 or more commits, for them to be present on GitLab you need to execute the following command:
+After your first commit to a newly created branch you must use the following command to add the *branch* to GitLab:
+
+```
+git push -u origin <name_of_new_child_branch>
+```
+
+Here, "origin" is Git's shorthand for our GitLab repo's URL, and you are putting your branch "upstream" into it.
+
+Afterwards, once you've made more commits, for them to be present on GitLab you jus need to execute the following command:
 
 ```
 git push
@@ -106,7 +114,7 @@ git pull origin <your_branch>
 
 Here, "origin" is Git's shorthand for our GitLab repo's URL.
 
-2. Navigate to the main branch and perfrom the merge
+2. Navigate to the main branch and perform the merge
 ```
 git checkout main  
 git merge <your_branch>
