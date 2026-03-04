@@ -1,4 +1,14 @@
 import Image from "next/image";
+import PostCard from "./components/PostCard"
+
+//used for viewing components I'm working on -Tyler
+// export default function Home() {
+//   return (
+//     <div>
+//       <PostCard></PostCard>
+//     </div>
+//   )
+// }
 
 export default function Home() {
   return (
