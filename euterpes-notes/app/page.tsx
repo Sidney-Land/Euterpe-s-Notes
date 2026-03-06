@@ -2,6 +2,15 @@ import Image from "next/image";
 import PostCard from "./components/PostCard"
 import SideBar from "./components/SideBar"
 
+export default function Home() {
+  return (
+    <div>
+      <SideBar></SideBar>
+      <PostCard></PostCard>
+    </div>
+  )
+}
+
 //used for viewing components I'm working on -Tyler
 // export default function Home() {
 //   return (
@@ -10,7 +19,7 @@ import SideBar from "./components/SideBar"
 //     </div>
 //   )
 // }
-
+/*
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -74,3 +83,4 @@ export default function Home() {
     </div>
   );
 }
+  */
