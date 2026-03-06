@@ -1,6 +1,7 @@
 import Image from "next/image";
 //imports the component I made -Tyler
 import PostCard from "./components/PostCard"
+import SideBar from "./components/SideBar"
 
 //used for viewing components I'm working on -Tyler
 //you can comment out/in a block of highlighted code with ctrl + /
