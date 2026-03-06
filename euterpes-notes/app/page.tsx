@@ -1,5 +1,6 @@
 import Image from "next/image";
 import PostCard from "./components/PostCard"
+import SideBar from "./components/SideBar"
 
 //used for viewing components I'm working on -Tyler
 // export default function Home() {
