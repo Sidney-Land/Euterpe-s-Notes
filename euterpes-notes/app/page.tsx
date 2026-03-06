@@ -1,10 +1,12 @@
 import Image from "next/image";
 import PostCard from "./components/PostCard"
 import SideBar from "./components/SideBar"
+import TitleBar from "./components/TitleBar"
 
 export default function Home() {
   return (
     <div>
+      <TitleBar></TitleBar>
       <SideBar></SideBar>
       <PostCard></PostCard>
     </div>

@@ -5,11 +5,11 @@ interface SideBarProp {}
 const SideBar = (props: SideBarProp) => {
     const SideBarStyle: CSSProperties = {
         // Sidebar-specific
-        height: '100%', /* Full-height: remove this if you want "auto" height */
+        height: '90%', /* Full-height: remove this if you want "auto" height */
         width: '15%', /* Set the width of the sidebar */
         position: 'fixed', /* Fixed Sidebar (stay in place on scroll) */
         zIndex: '1', /* Stay on top */
-        top: '0', /* Stay at the top */
+        top: '10%', /* Stay at the top */
         left: '0',
         backgroundColor: '#111', /* Black */
         overflowX: 'hidden', /* Disable horizontal scroll */
@@ -25,7 +25,6 @@ const SideBar = (props: SideBarProp) => {
         color: '#ffffff', //text color
 
         // Layout of the SideBar
-        margin: '1%',
         minHeight: '200px', // Maintain button visibility
         //these lines force a long string of text without space characters to wrap around if the text
         //is too long to fit into the card, preventing it from going off the card
