@@ -2,12 +2,17 @@ import Image from "next/image";
 //imports the component I made -Tyler
 import PostCard from "./components/PostCard"
 import SideBar from "./components/SideBar"
+import TitleBar from "./components/TitleBar"
+//makes the css style sheet available to all components
+import "./globals.css"
 
 //used for viewing components I'm working on -Tyler
 //you can comment out/in a block of highlighted code with ctrl + /
 export default function Home() {
   return (
     <div>
+      <TitleBar></TitleBar>
+      <SideBar></SideBar>
       <PostCard></PostCard>
     </div>
   );

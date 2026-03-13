@@ -8,17 +8,12 @@ const PostCard = (props: PostCardProps) => {
     //**style of the card**
     display: 'flex',
     //aligns the text to the top left of the screen
-    alignItems: 'flex-start',
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    background: '#292929',
-    border: '2px solid #e2e8f0',
-    //text color
-    color: '#ffffff',
 
     //**layout of the card**
     padding: '16px',
-    margin: '16px auto',
+    margin: '64px auto',
+    marginTop: '100px',
     width: '95%',
     maxWidth: '600px',
     //will adjust the height to fit the text within it
@@ -36,11 +31,42 @@ const PostCard = (props: PostCardProps) => {
     //fourth value there being opacity
     //boxShadow: '0 -1px 6px 2px rgb(255, 255, 255, 1)',
   }
+
+  const headerStyle: CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between', // Puts name on left, date on right
+    marginBottom: '12px',
+    borderBottom: '1px solid #ffffff', // Subtle separator
+    paddingBottom: '8px',
+    fontSize: '0.9rem',
+    color: '#cbd5e0'
+  };
+
+  const titleStyle: CSSProperties = {
+    //rem units adjust according to the root element, so the font here will change if we change
+    //the root font. We should use the globals.css file for setting our root font and import it 
+    //whenever we want to use it.
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    marginBottom: '8px'
+  };
+
     return (
-    <div style = {cardStyle} >
-        Placeholder card
+    //className imports the given style from globals.css
+    <div className= "component-style" style = {cardStyle} >
+      <div style={headerStyle}>
+        <strong>username</strong>
+        <span>date</span>
+      </div>
+      <div style = {titleStyle}>
+        Post Title
+      </div>
+        Main body of post
     </div>
   );
 }
 
 export default PostCard;
+
+//position: fixed will ignore margins of other components, leading to problems later. adding a
+//padding to the top of the page the same width as the header would fix this for now
