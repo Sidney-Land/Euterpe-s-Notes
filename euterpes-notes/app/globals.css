@@ -30,3 +30,23 @@ body {
   border: 2px solid #e2e8f0;
   color: #ffffff;
 }
+
+.button {
+  background-color: #636b6e;
+  border: none;
+  color: white;
+  padding: 5% 10%;
+  margin-bottom: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+.button:hover {
+  background-color: #647e87;
+  color: white;
+}
