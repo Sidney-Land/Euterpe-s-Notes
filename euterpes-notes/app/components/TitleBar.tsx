@@ -1,4 +1,5 @@
 import React, { CSSProperties } from 'react';
+import Image from "next/image";
 
 interface TitleBarProp {}
 
@@ -17,9 +18,9 @@ const TitleBar = (props: TitleBarProp) => {
         paddingRight: '20px',
 
         display: 'inline-flex',
-        alignItems: 'anchor-center', //aligns the buttons to the center of the sidebar
+        alignItems: 'center', //aligns the buttons to the center of the titlebar
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'left',
         background: '#292929',
         border: '2px solid #e2e8f0',
         color: '#ffffff', //text color
@@ -33,7 +34,25 @@ const TitleBar = (props: TitleBarProp) => {
 
     return (
     <div style = {TitleBarStyle} >
-        Placeholder Title
+
+        <a href='' >
+            <Image
+                src="/globe.svg"
+                alt="Placeholder Logo"
+                width={70}
+                height={70}
+                className='clickable'
+            />
+        </a>
+
+
+        <a href=''>
+            <h1 className='clickable'>Euterpe's Notes</h1>
+        </a>
+
+        <a className = "button" href= ''>Search</a>
+
+        <a className = "button" href= ''>Sign Up/Login</a>
     </div>
   );
 }
