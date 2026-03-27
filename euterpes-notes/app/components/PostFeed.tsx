@@ -7,7 +7,7 @@ const PostFeed = (props: PostFeedProps) => {
     return (
     //className imports the given style from globals.css
     <div>
-      {Array(10).fill(true).map((_, i) => <PostCard key={i} />)}
+      <PostCard></PostCard>
     </div>
   );
 }
