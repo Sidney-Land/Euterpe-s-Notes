@@ -1,8 +1,18 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, Suspense } from 'react';
+import { getPost } from '../lib/getData';
 
 interface PostCardProps {}
 
-const PostCard = (props: PostCardProps) => {
+type Post = {
+  id: string,
+  title: string,
+  content: string
+  author: string,
+  date: string,
+  category: string
+}
+
+const PostCard = async (props: PostCardProps) => {
   //what does cssproperties do again?
   const cardStyle: CSSProperties = {
     //**style of the card**
@@ -51,18 +61,23 @@ const PostCard = (props: PostCardProps) => {
     marginBottom: '8px'
   };
 
-    return (
+  const post: Post = await getPost('1');
+
+  return (
     //className imports the given style from globals.css
-    <div className= "component-style" style = {cardStyle} >
+    <Suspense fallback={<div></div>}>
+      <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>username</strong>
-        <span>date</span>
+        <strong>USERNAME{post.id}</strong>
+        <span>{post.date}</span>
       </div>
       <div style = {titleStyle}>
-        Post Title
+        {post.title}
       </div>
-        Main body of post
+        {post.content}
     </div>
+    </Suspense>
+    
   );
 }
 
