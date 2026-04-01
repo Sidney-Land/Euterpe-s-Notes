@@ -59,5 +59,6 @@ dummy-deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
+    - cd $FRONTEND_PATH
     - echo "Deploying Dummy Server..."
     - npm run start
