@@ -60,12 +60,10 @@ lint-test:   # This job also runs in the test stage. It warns us, but does not h
 
 dummy-deploy:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: 
-    name: production
-    auto_stop_in: 3 minutes
+  environment: production
   script:
     - cd $FRONTEND_PATH
     - echo "Deploying Dummy Server..."
-    - echo "Dummy Server will stop in less than 3 minutes"
-    - npm run start
+    - echo "Dummy Server will stop in 3 minutes"
+    - timeout --preserve-status 3m npm run start
   when: manual
