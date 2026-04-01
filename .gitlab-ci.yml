@@ -35,14 +35,11 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "TODO"
-
-frontend-packages-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
+    - echo "Installing Packages"
     - cd $FRONTEND_PATH
     - npm ci
+    - echo "Building the code..."
+    - npm run build
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
@@ -50,16 +47,17 @@ unit-test-job:   # This job runs in the test stage.
     - echo "Running unit tests..."
     - echo "TODO"
 
-lint-test-job:   # This job also runs in the test stage.
+lint-test-job:   # This job also runs in the test stage. It warns us, but does not halt pipeline upon fail
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - cd $FRONTEND_PATH
     - echo "Linting code..."
     - npm run lint
+  allow_failure: true
 
-deploy-job:      # This job runs in the deploy stage.
+dummy-deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - echo "Deploying application..."
-    - echo "TODO"
+    - echo "Deploying Dummy Server..."
+    - npm run start
