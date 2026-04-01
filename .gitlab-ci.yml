@@ -62,10 +62,10 @@ dummy-deploy:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   variables:
-    STOP_SECONDS: 180
+    STOP_SECONDS: 30
   script:
     - cd $FRONTEND_PATH
     - echo "Deploying Dummy Server..."
-    - echo "Dummy Server will stop in $STOP_SECONDS minutes"
-    - timeout -k $STOP_SECONDS npm run start
+    - echo "Dummy Server will stop in $STOP_SECONDS seconds"
+    - timeout $STOP_SECONDS npm run start
   when: manual
