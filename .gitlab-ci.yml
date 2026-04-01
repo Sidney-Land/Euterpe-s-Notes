@@ -65,5 +65,5 @@ dummy-deploy:      # This job runs in the deploy stage.
     - cd $FRONTEND_PATH
     - echo "Deploying Dummy Server..."
     - echo "Dummy Server will stop in 3 minutes"
-    - timeout --preserve-status 3m npm run start
+    - timeout -t 180 npm run start
   when: manual
