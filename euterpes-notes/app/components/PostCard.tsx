@@ -6,14 +6,14 @@ interface PostCardProps {}
 type Post = {
   id: string,
   title: string,
-  content: string
+  content: string,
   author: string,
   date: string,
   category: string
 }
 
-const PostCard = async (props: PostCardProps) => {
-  //what does cssproperties do again?
+const PostCard = async ({ postId }: { postId: string }) => {
+  //CSSProperties functions as an autocomplete for CSS rules
   const cardStyle: CSSProperties = {
     //**style of the card**
     display: 'flex',
@@ -61,11 +61,20 @@ const PostCard = async (props: PostCardProps) => {
     marginBottom: '8px'
   };
 
-  const post: Post = await getPost('1');
+  //will be used for an actual post
+  //const post: Post = await getPost(postId);
+
+  //a mock post for testing
+  const post = {
+    id: '1',
+    author: 'Test User',
+    date: '2024-05-20',
+    title: 'Placeholder Title',
+    content: 'This is what the content will look like once we have the keys!'
+  };
 
   return (
     //className imports the given style from globals.css
-    <Suspense fallback={<div></div>}>
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
         <strong>USERNAME{post.id}</strong>
@@ -76,7 +85,6 @@ const PostCard = async (props: PostCardProps) => {
       </div>
         {post.content}
     </div>
-    </Suspense>
     
   );
 }
