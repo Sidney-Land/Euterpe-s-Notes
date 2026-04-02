@@ -70,14 +70,15 @@ const PostCard = async ({ postId }: { postId: string }) => {
     author: 'Test User',
     date: '2024-05-20',
     title: 'Placeholder Title',
-    content: 'This is what the content will look like once we have the keys!'
+    content: 'This is what the content will look like once we have the keys!',
+    category: 'Temp category'
   };
 
   return (
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>USERNAME{post.id}</strong>
+        <strong>{post.author}</strong>
         <span>{post.date}</span>
       </div>
       <div style = {titleStyle}>

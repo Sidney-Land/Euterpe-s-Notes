@@ -10,12 +10,21 @@ import { Suspense } from "react";
 //used for viewing components I'm working on -Tyler
 //you can comment out/in a block of highlighted code with ctrl + /
 export default function Home() {
+
+  //an array to be filled with content from supabase later
+  const mockPosts = [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" }
+  ];
+
   return (
     <Suspense fallback={<div></div>}>
       <div>
-        <TitleBar></TitleBar>
-        <SideBar></SideBar>
-        <PostCard postId = "1"/>
+        {/* We map through the array to create multiple cards */}
+        {mockPosts.map((post) => (
+          <PostCard key={post.id} postId={post.id} />
+        ))}
       </div>
     </Suspense>
   );

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import TitleBar from "./components/TitleBar";
+import SideBar from "./components/SideBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,10 +26,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* TitleBar stays at the top of every page */}
+        <TitleBar /> 
+        
+        <div style={{ display: 'flex' }}>
+          {/* SideBar stays on the left of every page */}
+          <SideBar /> 
+          
+          <main style={{ flex: 1 }}>
+            {/* This is where your Home Page (page.tsx) 
+               or any other page will be "injected" 
+            */}
+            
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );
