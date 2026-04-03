@@ -6,23 +6,27 @@ import TitleBar from "./components/TitleBar"
 //makes the css style sheet available to all components
 import "./globals.css"
 import { Suspense } from "react";
+import { getAllPostIds } from "./lib/getData";
 
-export default function Home() {
+export default async function Home() {
 
-  //an array to be filled with content from supabase later
-  const mockPosts = [
-    { id: "1" },
-    { id: "2" },
-    { id: "3" }
-  ];
+  //Fetches the actual IDs from the database
+  const posts = await getAllPostIds();
 
   return (
-    <Suspense fallback={<div></div>}>
+    <Suspense fallback={<div>Loading your feed...</div>}>
       <div>
-        {/* We map through the array to create multiple cards */}
-        {mockPosts.map((post) => (
-          <PostCard key={post.id} postId={post.id} />
+        {/* 2. Map through the supabase results */}
+        {posts.map((post) => (
+          <PostCard key={post.post_id} postId={post.post_id} />
         ))}
+        
+        {/* 3. Handle the empty state */}
+        {posts.length === 0 && (
+          <p style={{ textAlign: 'center', marginTop: '50px' }}>
+            No posts found. Time to share some music!
+          </p>
+        )}
       </div>
     </Suspense>
   );

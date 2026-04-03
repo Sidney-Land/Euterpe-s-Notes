@@ -7,7 +7,7 @@ type Post = {
   id: string,
   title: string,
   content: string,
-  author: string,
+  poster_id: string,
   date: string,
   category: string
 }
@@ -64,10 +64,19 @@ const PostCard = async ({ postId }: { postId: string }) => {
   //will be used for an actual post
   const post: Post = await getPost(postId);
 
+  //if the post is null, it means there was an error with the database connection or the postId was not found in the database.
+  if (!post) {
+    return (
+      <div style={cardStyle} className="component-style">
+        <p>Post #{postId} not found in database.</p>
+      </div>
+    );
+  }
+
   //a mock post for testing
   // const post = {
   //   id: '1',
-  //   author: 'Test User',
+  //   poster_id: 'Test User',
   //   date: '2024-05-20',
   //   title: 'Placeholder Title',
   //   content: 'This is what the content will look like once we have the keys!',
@@ -78,7 +87,7 @@ const PostCard = async ({ postId }: { postId: string }) => {
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>{post.author}</strong>
+        <strong>{post.poster_id}</strong>
         <span>{post.date}</span>
       </div>
       <div style = {titleStyle}>
