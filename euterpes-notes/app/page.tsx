@@ -6,8 +6,6 @@ import TitleBar from "./components/TitleBar"
 //makes the css style sheet available to all components
 import "./globals.css"
 
-//used for viewing components I'm working on -Tyler
-//you can comment out/in a block of highlighted code with ctrl + /
 export default function Home() {
   return (
     <div>

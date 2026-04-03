@@ -1,8 +1,13 @@
 import React, { CSSProperties } from 'react';
+import Link from 'next/link';
 
-interface SideBarProp {}
+interface SideBarProps {
+  mode?: 'home' | 'profile';
+  profileId?: string;
+}
 
-const SideBar = (props: SideBarProp) => {
+const SideBar = ({ mode = 'home', profileId = 'username' }: SideBarProps) => {
+    const isProfileMode = mode === 'profile';
     const SideBarStyle: CSSProperties = {
       //keeps the sidebar in place if the user scrolls the page
       position: 'fixed',
@@ -10,10 +15,10 @@ const SideBar = (props: SideBarProp) => {
       //vh is the same as % except it looks at the space on screen, while % looks at the given 
       //height of the parent component.
 
-      //top tells the component where to start
-      top: '10vh',
-      //calculates the height by subtracting the height of the header
-      height: 'calc(100vh - 10vh)',
+        //top tells the component where to start
+        top: '10vh',
+        //calculates the height by subtracting the height of the header
+        height: 'calc(100vh - 10vh)',
       width: '240px',
 
       display: 'inline-flex',
@@ -26,15 +31,25 @@ const SideBar = (props: SideBarProp) => {
     }
 
     // TODO: Add logic to route to user's profile if signed in, or to the authentication page if not
-    function ProfileLink():string {
-        return "";
-    }
+    const links = isProfileMode
+      ? [
+          { label: 'Home', href: '/' },
+          { label: 'Recent Posts', href: '/' },
+        ]
+      : [
+          { label: 'Profile', href: `/profile/${encodeURIComponent(profileId)}` },
+          { label: 'Recent Posts', href: '/' },
+        ];
 
     // TODO: Add link to Recent Posts (useful for going to Recent Posts Feed if signed in)
+    
     return (
-    <div className = "component-style" style = {SideBarStyle} >
-      <a className = "button" href= {ProfileLink()}>Profile</a>
-      <a className = "button" href= ''>Recent Posts</a>
+    <div className="component-style" style={SideBarStyle}>
+      {links.map((link) => (
+        <Link key={link.label} className="button" href={link.href}>
+          {link.label}
+        </Link>
+      ))}
     </div>
   );
 }
