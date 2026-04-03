@@ -62,17 +62,17 @@ const PostCard = async ({ postId }: { postId: string }) => {
   };
 
   //will be used for an actual post
-  //const post: Post = await getPost(postId);
+  const post: Post = await getPost(postId);
 
   //a mock post for testing
-  const post = {
-    id: '1',
-    author: 'Test User',
-    date: '2024-05-20',
-    title: 'Placeholder Title',
-    content: 'This is what the content will look like once we have the keys!',
-    category: 'Temp category'
-  };
+  // const post = {
+  //   id: '1',
+  //   author: 'Test User',
+  //   date: '2024-05-20',
+  //   title: 'Placeholder Title',
+  //   content: 'This is what the content will look like once we have the keys!',
+  //   category: 'Temp category'
+  // };
 
   return (
     //className imports the given style from globals.css
