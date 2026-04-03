@@ -1,16 +1,23 @@
 "use client";
 
 import { ChangeEvent, useRef, useState } from "react";
+import SideBar from "../../components/SideBar";
+import TitleBar from "../../components/TitleBar";
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  profileId: string;
+}
+
+export default function ProfilePage({ profileId }: ProfilePageProps) {
+  const username = profileId.trim().length > 0 ? profileId : "username";
   // Makes sidebar visible
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [displayName, setDisplayName] = useState("Users Name");
+  const [displayName, setDisplayName] = useState(username);
   const [bio, setBio] = useState("No bio yet");
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [headerImage, setHeaderImage] = useState<string | null>(null);
   const [activeEditor, setActiveEditor] = useState<"name" | "bio" | null>(null);
-  const [draftName, setDraftName] = useState("Users Name");
+  const [draftName, setDraftName] = useState(username);
   const [draftBio, setDraftBio] = useState("No bio yet");
   const profileInputRef = useRef<HTMLInputElement>(null);
   const headerInputRef = useRef<HTMLInputElement>(null);
@@ -78,26 +85,11 @@ export default function ProfilePage() {
   return (
     // Root page container.
     <div className="min-h-screen bg-black text-white">
-
-      {/* Sidebar */}
-      <div className="fixed top-0 left-0 h-screen w-64 bg-zinc-900 border-r border-zinc-800 flex flex-col p-6">
-        <h2 className="text-xl font-bold mb-6">Logo</h2>
-
-        <nav className="flex flex-col space-y-4 text-lg">
-          <button className="text-left hover:text-gray-400 transition">Home</button>
-          <button className="text-left hover:text-gray-400 transition">Recent Posts</button>
-          <button
-            onClick={openEdit}
-            className="text-left hover:text-gray-400 transition"
-          >
-            Edit
-          </button>
-          <button className="text-left hover:text-gray-400 transition">Login/Signup</button>
-        </nav>
-      </div>
+      <TitleBar />
+      <SideBar mode="profile" profileId={username} />
 
       {/* Main profile content area */}
-      <div className="ml-64">
+      <div className="ml-[240px] pt-[10vh]">
         {/* Header Image */}
         <div className="h-40 w-full overflow-hidden bg-gray-300">
           {headerImage && (
@@ -129,7 +121,7 @@ export default function ProfilePage() {
             {/* Username */}
             <div className="min-w-0">
               <h1 className="text-2xl font-bold">{displayName}</h1>
-              <p className="text-gray-500">@username</p>
+              <p className="text-gray-500">@{username}</p>
             </div>
 
             <div className="flex flex-col items-center justify-self-center">
