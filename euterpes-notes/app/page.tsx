@@ -5,14 +5,26 @@ import SideBar from "./components/SideBar"
 import TitleBar from "./components/TitleBar"
 //makes the css style sheet available to all components
 import "./globals.css"
+import { Suspense } from "react";
 
 export default function Home() {
+
+  //an array to be filled with content from supabase later
+  const mockPosts = [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" }
+  ];
+
   return (
-    <div>
-      <TitleBar></TitleBar>
-      <SideBar></SideBar>
-      <PostCard></PostCard>
-    </div>
+    <Suspense fallback={<div></div>}>
+      <div>
+        {/* We map through the array to create multiple cards */}
+        {mockPosts.map((post) => (
+          <PostCard key={post.id} postId={post.id} />
+        ))}
+      </div>
+    </Suspense>
   );
 }
 

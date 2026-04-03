@@ -1,9 +1,19 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, Suspense } from 'react';
+import { getPost } from '../lib/getData';
 
 interface PostCardProps {}
 
-const PostCard = (props: PostCardProps) => {
-  //what does cssproperties do again?
+type Post = {
+  id: string,
+  title: string,
+  content: string,
+  author: string,
+  date: string,
+  category: string
+}
+
+const PostCard = async ({ postId }: { postId: string }) => {
+  //CSSProperties functions as an autocomplete for CSS rules
   const cardStyle: CSSProperties = {
     //**style of the card**
     display: 'flex',
@@ -51,18 +61,32 @@ const PostCard = (props: PostCardProps) => {
     marginBottom: '8px'
   };
 
-    return (
+  //will be used for an actual post
+  const post: Post = await getPost(postId);
+
+  //a mock post for testing
+  // const post = {
+  //   id: '1',
+  //   author: 'Test User',
+  //   date: '2024-05-20',
+  //   title: 'Placeholder Title',
+  //   content: 'This is what the content will look like once we have the keys!',
+  //   category: 'Temp category'
+  // };
+
+  return (
     //className imports the given style from globals.css
-    <div className= "component-style" style = {cardStyle} >
+      <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>username</strong>
-        <span>date</span>
+        <strong>{post.author}</strong>
+        <span>{post.date}</span>
       </div>
       <div style = {titleStyle}>
-        Post Title
+        {post.title}
       </div>
-        Main body of post
+        {post.content}
     </div>
+    
   );
 }
 
