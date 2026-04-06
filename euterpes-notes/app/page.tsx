@@ -23,7 +23,7 @@ export default async function Home() {
         
         {/* 3. Handle the empty state */}
         {posts.length === 0 && (
-          <p style={{ textAlign: 'center', marginTop: '50px' }}>
+          <p style={{ textAlign: 'center', marginTop: '100px' }}>
             No posts found. Time to share some music!
           </p>
         )}
