@@ -6,10 +6,11 @@ interface PostCardProps {}
 type Post = {
   id: string,
   title: string,
+  music_link: string,
   content: string,
   poster_id: string,
-  date: string,
-  category: string
+  poster_name: string, // Found through a join, use "Profile.poster_name" to access
+  timestamp: string
 }
 
 const PostCard = async ({ postId }: { postId: string }) => {
@@ -87,13 +88,17 @@ const PostCard = async ({ postId }: { postId: string }) => {
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>{post.poster_id}</strong>
-        <span>{post.date}</span>
+        <strong>{post.Profile.poster_name}</strong>
+        <span>{post.timestamp}</span>
       </div>
       <div style = {titleStyle}>
         {post.title}
       </div>
+      <div></div>
+        {post.music_link}
+      <div>
         {post.content}
+      </div>
     </div>
     
   );
