@@ -23,9 +23,18 @@ export default async function Home() {
         
         {/* 3. Handle the empty state */}
         {posts.length === 0 && (
-          <p style={{ textAlign: 'center', marginTop: '100px' }}>
-            No posts found. Time to share some music!
+          <div style={{ marginLeft: '240px', width: 'calc(100% - 240px)' }}>
+            {/*The width calculation adjusts for the sidebar since other components can't see the sidebars margins*/}
+            <p style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              minHeight: '100vh', 
+              margin: 0 
+            }}>
+              No posts found. Time to share some music!
           </p>
+        </div>
         )}
       </div>
     </Suspense>

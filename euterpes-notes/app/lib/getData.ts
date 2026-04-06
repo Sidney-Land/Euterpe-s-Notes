@@ -37,7 +37,6 @@ export async function getPost(post_id: string) {
     return data && data.length > 0 ? data[0] : null;
 }
 
-// Add this to lib/getData.ts
 export async function getAllPostIds() {
     const { data, error } = await supabase
         .from("Post")
