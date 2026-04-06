@@ -9,8 +9,13 @@ type Post = {
   music_link: string,
   content: string,
   poster_id: string,
-  poster_name: string, // Found through a join, use "Profile.poster_name" to access
+  Profile: Profile,
   timestamp: string
+}
+
+type Profile = {
+  user_id: string
+  display_name: string
 }
 
 const PostCard = async ({ postId }: { postId: string }) => {
@@ -88,7 +93,7 @@ const PostCard = async ({ postId }: { postId: string }) => {
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>{post.Profile.poster_name}</strong>
+        <strong>{post.Profile.display_name}</strong>
         <span>{post.timestamp}</span>
       </div>
       <div style = {titleStyle}>

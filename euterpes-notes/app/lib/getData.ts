@@ -23,7 +23,7 @@ import { supabase } from './supabaseClient'; // Use the client you already made!
 export async function getPost(post_id: string) {
     const { data, error } = await supabase
         .from("Post") 
-        .select('*, Profile(poster_name:display_name)')
+        .select('*, Profile(display_name)')
         .eq('post_id', post_id); // Remove .single() for a moment
 
     // If data is an empty array [], it means the connection works but the table is empty!
