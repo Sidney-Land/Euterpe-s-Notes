@@ -1,4 +1,5 @@
 import React, { CSSProperties, Suspense } from 'react';
+import {Post, Profile} from '../lib/dbSchema'
 import { getPost } from '../lib/getData';
 
 interface PostCardProps {}

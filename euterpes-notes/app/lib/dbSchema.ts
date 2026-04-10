@@ -1,7 +1,7 @@
 'use server'
 import 'server-only'
 
-type Post = {
+export type Post = {
   id: string,
   title: string,
   music_link: string,
@@ -11,13 +11,13 @@ type Post = {
   timestamp: string
 }
 
-type Profile = {
+export type Profile = {
   user_id: string
   display_name: string
   bio: string
 }
 
-type Following = {
+export type Following = {
     user_id: string
     followed_id: string
 }
