@@ -3,21 +3,6 @@ import { getPost } from '../lib/getData';
 
 interface PostCardProps {}
 
-type Post = {
-  id: string,
-  title: string,
-  music_link: string,
-  content: string,
-  poster_id: string,
-  Profile: Profile,
-  timestamp: string
-}
-
-type Profile = {
-  user_id: string
-  display_name: string
-}
-
 const PostCard = async ({ postId }: { postId: string }) => {
   //CSSProperties functions as an autocomplete for CSS rules
   const cardStyle: CSSProperties = {
