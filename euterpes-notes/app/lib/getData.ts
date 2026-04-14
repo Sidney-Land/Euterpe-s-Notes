@@ -1,25 +1,7 @@
 'use server'
 import 'server-only'
-import { supabase } from './supabaseClient'; // Use the client you already made!
+import { supabase } from './supabaseClient';
 
-//official version to be used once we have data in supabase.
-// export async function getPost(post_id: string) {
-//     // We tell Supabase: "Give me the post where the id matches our postId"
-//     const { data, error } = await supabase
-//         .from("Post") 
-//         .select('*')
-//         .eq('id', post_id)
-//         .single(); // Since we only want one post
-
-//     if (error) {
-//         console.error("Error fetching post:", error);
-//         return null;
-//     }
-
-//     return data;
-// }
-
-//temporary version to make sure the connection is working without any data in supabase
 export async function getPost(post_id: string) {
     const { data, error } = await supabase
         .from("Post") 
