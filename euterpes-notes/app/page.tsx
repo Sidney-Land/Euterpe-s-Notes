@@ -6,50 +6,40 @@ import TitleBar from "./components/TitleBar"
 //makes the css style sheet available to all components
 import { Suspense } from "react";
 import { getAllPostIds } from "./lib/getData";
-import SignUp from "./components/SignUp"
 
-export default function Home() {
+
+export default async function Home() {
+
+  //Fetches the actual IDs from the database
+  const posts = await getAllPostIds();
+
   return (
-    <div>
-      <TitleBar />
-      <SignUp /> {/* Add it here to test */}
-      {/* ... your PostCard feed ... */}
-    </div>
+    <Suspense fallback={<div>Loading your feed...</div>}>
+      <div>
+        {/* 2. Map through the supabase results */}
+        {posts.map((post) => (
+          <PostCard key={post.post_id} postId={post.post_id} />
+        ))}
+        
+        {/* 3. Handle the empty state */}
+        {posts.length === 0 && (
+          <div style={{ marginLeft: '240px', width: 'calc(100% - 240px)' }}>
+            {/*The width calculation adjusts for the sidebar since other components can't see the sidebars margins*/}
+            <p style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center', 
+              minHeight: '100vh', 
+              margin: 0 
+            }}>
+              No posts found. Time to share some music!
+          </p>
+        </div>
+        )}
+      </div>
+    </Suspense>
   );
 }
-
-// export default async function Home() {
-
-//   //Fetches the actual IDs from the database
-//   const posts = await getAllPostIds();
-
-//   return (
-//     <Suspense fallback={<div>Loading your feed...</div>}>
-//       <div>
-//         {/* 2. Map through the supabase results */}
-//         {posts.map((post) => (
-//           <PostCard key={post.post_id} postId={post.post_id} />
-//         ))}
-        
-//         {/* 3. Handle the empty state */}
-//         {posts.length === 0 && (
-//           <div style={{ marginLeft: '240px', width: 'calc(100% - 240px)' }}>
-//             {/*The width calculation adjusts for the sidebar since other components can't see the sidebars margins*/}
-//             <p style={{ 
-//               display: 'flex', 
-//               justifyContent: 'center', 
-//               alignItems: 'center', 
-//               minHeight: '100vh', 
-//               margin: 0 
-//             }}>
-//               No posts found. Time to share some music!
-//           </p>
-//         </div>
-//         )}
-//       </div>
-//     </Suspense>
-//   );
-// }
 
 // export default function Home() {
 //   return (

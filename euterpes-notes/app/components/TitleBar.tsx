@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import Image from "next/image";
+import Link from "next/link";
 
 interface TitleBarProp {}
 
@@ -35,7 +36,7 @@ const TitleBar = (props: TitleBarProp) => {
     return (
     <div style = {TitleBarStyle} >
 
-        <a href='' >
+        <Link href="/">
             <Image
                 src="/globe.svg"
                 alt="Placeholder Logo"
@@ -43,16 +44,18 @@ const TitleBar = (props: TitleBarProp) => {
                 height={70}
                 className='clickable'
             />
-        </a>
+        </Link>
 
 
-        <a href=''>
+        <Link href="/">
             <h1 className='clickable'>Euterpe's Notes</h1>
-        </a>
+        </Link>
 
         <a className = "button" href= ''>Search</a>
 
-        <a className = "button" href= ''>Sign Up/Login</a>
+        <Link href="/signup" className="button" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Sign Up/Login
+        </Link>
     </div>
   );
 }
