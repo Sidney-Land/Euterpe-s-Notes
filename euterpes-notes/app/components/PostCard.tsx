@@ -79,7 +79,7 @@ const PostCard = async ({ postId }: { postId: string }) => {
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
-        <strong>{post.Profile.display_name}</strong>
+        <strong>{post.profile.display_name}</strong>
         <span>{post.timestamp}</span>
       </div>
       <div style = {titleStyle}>

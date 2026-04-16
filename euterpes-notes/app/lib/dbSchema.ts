@@ -7,7 +7,7 @@ export type Post = {
   music_link: string,
   content: string,
   poster_id: string,
-  Profile: Profile,
+  profile: Profile,
   timestamp: string
 }
 

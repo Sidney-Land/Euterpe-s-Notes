@@ -4,8 +4,8 @@ import { supabase } from './supabaseClient';
 
 export async function getPost(post_id: string) {
     const { data, error } = await supabase
-        .from("Post") 
-        .select('*, Profile(display_name)')
+        .from("post") 
+        .select('*, profile(display_name)')
         .eq('post_id', post_id); // Remove .single() for a moment
 
     // If data is an empty array [], it means the connection works but the table is empty!
@@ -21,7 +21,7 @@ export async function getPost(post_id: string) {
 
 export async function getAllPostIds() {
     const { data, error } = await supabase
-        .from("Post")
+        .from("post")
         .select('post_id'); // We only need the IDs to start the map
 
     if (error) {

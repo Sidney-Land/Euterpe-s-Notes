@@ -15,39 +15,35 @@ const handleSignUp = async (e: React.FormEvent) => {
     setLoading(true);
     setMessage('');
 
-    //Creates the User in Supabase Auth
+    // Creates the User in Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          display_name: username,
+        }
+      }
     });
 
     if (authError) {
+      // If Supabase returns an error (e.g., email already exists, password too short)
       setMessage(`Auth Error: ${authError.message}`);
-      setLoading(false);
-      return;
-    }
-
-    //If Auth worked, create the Profile in the Profile table
-    if (authData.user) {
-      const { error: profileError } = await supabase
-        .from('Profile')
-        .insert([
-          { 
-            user_id: authData.user.id, //Linking the two worlds
-            display_name: username, 
-            bio: '' //Leaving bio empty for now
-          },
-        ]);
-
-      if (profileError) {
-        setMessage(`Profile Error: ${profileError.message}`);
-      } else {
-        setMessage('Success! Account created. Check your email to verify!');
-      }
+    } else if (authData.user) {
+      // If data.user exists, the request was successful
+      setMessage('Success! Check your email for a confirmation link to activate your account.');
+      
+      // Optional: Clear the form fields on success
+      setEmail('');
+      setPassword('');
+      setUsername('');
+    } else {
+      // Fallback for unexpected cases
+      setMessage('Something went wrong. Please try again.');
     }
 
     setLoading(false);
-  };
+};
 
   const SignUpStyle: CSSProperties = {
     maxWidth: '400px', 
