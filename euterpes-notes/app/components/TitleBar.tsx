@@ -1,10 +1,43 @@
+"use client"
+
 import React, { CSSProperties } from 'react';
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 interface TitleBarProp {}
 
 const TitleBar = (props: TitleBarProp) => {
+
+    // --- 1. State and Routing Hooks ---
+    const [user, setUser] = useState<any>(null);
+    const router = useRouter();
+
+    // --- 2. Auth Listener Logic ---
+    useEffect(() => {
+        // Check current session when component loads
+        const getSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            setUser(session?.user ?? null);
+        };
+        getSession();
+
+        // Listen for login/logout events across the app
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    // Function to handle logout
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        router.push('/'); // Optional: send user home after logging out
+    };
+
     const TitleBarStyle: CSSProperties = {
         // Titlebar-specific
         height: '10%',
@@ -53,9 +86,22 @@ const TitleBar = (props: TitleBarProp) => {
 
         <a className = "button" href= ''>Search</a>
 
-        <Link href="/signup" className="button" style={{ textDecoration: 'none', color: 'inherit' }}>
-            Sign Up/Login
-        </Link>
+        {/* --- 3. Conditional Button Rendering --- */}
+        {user ? (
+            // If user is logged in, show Logout
+            <button 
+                onClick={handleLogout} 
+                className="button" 
+                style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}
+            >
+                Logout
+            </button>
+        ) : (
+            // If no user, show Sign Up / Login link
+            <Link href="/signup" className="button" style={{ textDecoration: 'none', color: 'inherit' }}>
+                Sign Up/Login
+            </Link>
+        )}
     </div>
   );
 }

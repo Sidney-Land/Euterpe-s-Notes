@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import React, { CSSProperties } from 'react';
+import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -148,6 +149,17 @@ return (
           {loading ? 'Processing...' : 'Register'}
         </button>
       </form>
+
+      {/* Link to Login Page */}
+      <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#cbd5e0' }}>
+        Already have an account?{' '}
+        <Link
+          href="/login" 
+          style={{ color: '#63b3ed', textDecoration: 'underline', fontWeight: 'bold' }}
+        >
+          Log in here
+        </Link>
+      </div>
 
       {message && (
         <p style={{ 

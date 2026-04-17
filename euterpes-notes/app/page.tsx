@@ -3,7 +3,6 @@ import Image from "next/image";
 import PostCard from "./components/PostCard"
 import SideBar from "./components/SideBar"
 import TitleBar from "./components/TitleBar"
-//makes the css style sheet available to all components
 import { Suspense } from "react";
 import { getAllPostIds } from "./lib/getData";
 
