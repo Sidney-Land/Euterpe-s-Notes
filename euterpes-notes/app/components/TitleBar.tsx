@@ -92,7 +92,7 @@ const TitleBar = (props: TitleBarProp) => {
             <button 
                 onClick={handleLogout} 
                 className="button" 
-                style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}
+                style={{ background: '', border: 'none', color: 'inherit', cursor: 'pointer' }}
             >
                 Logout
             </button>

@@ -41,16 +41,24 @@ body {
 
 .button {
   background-color: #636b6e;
-  border: none;
   color: white;
-  padding: 5% 10%;
+  padding: 10px 20px; /* Changed from % to px for consistency */
   margin: 5px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-
+  display: inline-flex; /* Use flex to center text perfectly */
+  align-items: center;
+  justify-content: center;
+  
+  /* Reset button-specific defaults */
+  border: none;
+  font-family: inherit; /* Inherit font from body */
+  font-size: 1rem;      /* Ensure consistent font size */
   cursor: pointer;
   transition-duration: 0.4s;
+  
+  /* Reset for <a> tags specifically */
+  appearance: none;
 }
 
 .button:hover {
