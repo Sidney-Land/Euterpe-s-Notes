@@ -46,10 +46,14 @@ const handleSignUp = async (e: React.FormEvent) => {
 };
 
   const SignUpStyle: CSSProperties = {
-    maxWidth: '400px', 
+    width: 'calc(95% - 300px)', 
+    maxWidth: '600px', 
+    minWidth: '300px',
     margin: '20px auto', 
     marginTop: '100px',
-    padding: '20px'
+    marginLeft: 'auto',
+    padding: '20px',
+    transform: 'translateX(100px)'
   }
 
   const FormStyle: CSSProperties = {

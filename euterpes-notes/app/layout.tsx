@@ -33,10 +33,9 @@ export default function RootLayout({
         <div style={{ display: 'flex' }}>
           {/* SideBar stays on the left of every page */}
           <SideBar /> 
-          
           <main style={{ flex: 1 }}>
             {/* This is where your Home Page (page.tsx) 
-               or any other page will be "injected" 
+              or any other page will be "injected" 
             */}
             
             {children}
