@@ -32,5 +32,20 @@ export async function getAllPostIds() {
     return data; // This returns an array like [{post_id: "1"}, {post_id: "2"}]
 }
 
+export async function getDisplayName(user_id: string) {
+    const { data, error} = await supabase
+        .from("profile")
+        .select('display_name')
+        .eq('user_id', user_id)
+        .single()
+
+    if(error) {
+        console.error("Error fetching username: ", error);
+        return null;
+    }
+
+    return data;
+}
+
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.
