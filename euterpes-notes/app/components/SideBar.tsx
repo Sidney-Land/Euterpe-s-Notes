@@ -40,6 +40,7 @@ const SideBar = ({ mode = 'home', profileId = 'username' }: SideBarProps) => {
       : [
           { label: 'Profile', href: `/profile/${encodeURIComponent(profileId)}` },
           { label: 'Recent Posts', href: '/' },
+          { label: 'Create Post', href: '/note/' },
         ];
 
     // TODO: Add link to Recent Posts (useful for going to Recent Posts Feed if signed in)

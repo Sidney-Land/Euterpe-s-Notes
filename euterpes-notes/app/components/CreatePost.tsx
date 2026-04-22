@@ -5,42 +5,37 @@ import React, { CSSProperties } from 'react';
 import Link from "next/link";
 
 export default function CreatePost() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [title, setTitle] = useState('');
+  const [musicLink, setMusicLink] = useState('');
+  const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [username, setUsername] = useState('');
 
-const handleSignUp = async (e: React.FormEvent) => {
+const handlePosting = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
-    // Creates the User in Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: username,
-        }
-      }
-    });
+    // Creates the Post in Supabase
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+        const poster_id = session.user.id;
 
-    if (authError) {
-      // If Supabase returns an error (e.g., email already exists, password too short)
-      setMessage(`Auth Error: ${authError.message}`);
-    } else if (authData.user) {
-      // If data.user exists, the request was successful
-      setMessage('Success! Check your email for a confirmation link to activate your account.');
+        const { data, error } = await supabase
+            .from("post") 
+            .insert({title: title, music_link: musicLink, content: content, poster_id: poster_id})
+
+        if (!error) {
+            setMessage('Success! Check your profile or the Recent Posts feed to see your post!');
       
-      // Optional: Clear the form fields on success
-      setEmail('');
-      setPassword('');
-      setUsername('');
-    } else {
-      // Fallback for unexpected cases
-      setMessage('Something went wrong. Please try again.');
+            // Optional: Clear the form fields on success
+            setTitle('');
+            setMusicLink('');
+            setContent('');
+        } else {
+            console.error("Supabase Error:", error.message);
+            setMessage(`Supabase Error: ${error.message}`);
+        }
     }
 
     setLoading(false);
@@ -83,50 +78,47 @@ const handleSignUp = async (e: React.FormEvent) => {
 return (
     <div className="component-style" style={SignUpStyle}>
       <h2 style={{ marginBottom: '24px', textAlign: 'center', fontSize: '1.8rem', width: '100%' }}>
-        Create Account
+        Create Post
       </h2>
       
-      <form onSubmit={handleSignUp} style={FormStyle}>
+      <form onSubmit={handlePosting} style={FormStyle}>
         
-        {/* Username Input Group */}
+        {/* Title Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="username" style={labelStyle}>Username</label>
+          <label htmlFor="title" style={labelStyle}>Title</label>
           <input 
-            id="username"
+            id="title"
             type="text" 
-            placeholder="What is your public username?" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
+            placeholder="Draft your eye-catching Title!" 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)} 
             required 
             style={inputStyle}
           />
         </div>
 
-        {/* Email Input Group */}
+        {/* Music Link Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="email" style={labelStyle}>Email Address</label>
+          <label htmlFor="musicLink" style={labelStyle}>Music Link</label>
           <input 
-            id="email"
-            type="email" 
-            placeholder="e.g. user@email.com" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+            id="musicLink"
+            type="text" 
+            placeholder="Link your cool song! (optional)" 
+            value={musicLink} 
+            onChange={(e) => setMusicLink(e.target.value)}  
             style={inputStyle}
           />
         </div>
 
-        {/* Password Input Group */}
-        {/*the password minimum depends on if supabase's default minimum of 6 characters is active*/}
+        {/* Description/Content Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="password" style={labelStyle}>Password</label>
+          <label htmlFor="content" style={labelStyle}>Description</label>
           <input 
-            id="password"
-            type="password" 
-            placeholder="At least 6 characters" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+            id="content"
+            type="text" 
+            placeholder="What do you love about this awesome track? (optional)" 
+            value={content} 
+            onChange={(e) => setContent(e.target.value)}  
             style={inputStyle}
           />
         </div>
@@ -146,20 +138,9 @@ return (
             fontSize: '1rem'
           }}
         >
-          {loading ? 'Processing...' : 'Register'}
+          {loading ? 'Processing...' : 'Post Note'}
         </button>
       </form>
-
-      {/* Link to Login Page */}
-      <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '0.9rem', color: '#cbd5e0' }}>
-        Already have an account?{' '}
-        <Link
-          href="/login" 
-          style={{ color: '#63b3ed', textDecoration: 'underline', fontWeight: 'bold' }}
-        >
-          Log in here
-        </Link>
-      </div>
 
       {message && (
         <p style={{ 
