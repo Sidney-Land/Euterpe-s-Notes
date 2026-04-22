@@ -47,5 +47,12 @@ export async function getDisplayName(user_id: string) {
     return data;
 }
 
+/*
+export async function getProfile(user_id: string) {
+    .from("profile")
+    .select('*')
+    .eq('user_id', user_id)
+
+}*/
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.
