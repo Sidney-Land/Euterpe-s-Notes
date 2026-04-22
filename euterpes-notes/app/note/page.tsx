@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-export default function CreatePostPage() {
-    return <CreatePost></CreatePost>
-=======
-import { Crafty_Girls } from 'next/font/google';
 import CreatePost from '../components/CreatePost'
 
 export default function CreatePostPage() {
@@ -11,5 +6,4 @@ export default function CreatePostPage() {
       <CreatePost></CreatePost>
     </main>
   );
->>>>>>> main
 }
