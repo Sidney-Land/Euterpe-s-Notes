@@ -35,6 +35,7 @@ const SideBar = ({ mode = 'home', profileId = 'username' }: SideBarProps) => {
       ? [
           { label: 'Home', href: '/' },
           { label: 'Recent Posts', href: '/' },
+          { label: 'Post', href: '/'}
         ]
       : [
           { label: 'Profile', href: `/profile/${encodeURIComponent(profileId)}` },
