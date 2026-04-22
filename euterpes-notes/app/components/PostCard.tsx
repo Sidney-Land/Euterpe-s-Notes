@@ -76,12 +76,18 @@ const PostCard = async ({ postId }: { postId: string }) => {
   //   category: 'Temp category'
   // };
 
+  // Outputs the timestamp in HH:MM MM/DD/YYYY format (using 24-hour time)
+  function makeHumanReadable(timestamp: Post["timestamp"]) {
+    const parse = timestamp.split(/\D/);
+    return parse[3] + ":" + parse[4] + " " + parse[1] + "/" + parse[2] + "/" + parse[0]
+  }
+
   return (
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
         <strong>{post.profile.display_name}</strong>
-        <span>{post.timestamp}</span>
+        <span>{makeHumanReadable(post.timestamp)}</span>
       </div>
       <div style = {titleStyle}>
         {post.title}

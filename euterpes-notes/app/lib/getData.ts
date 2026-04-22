@@ -9,7 +9,7 @@ export async function getPost(post_id: string) {
         .eq('post_id', post_id); // Remove .single() for a moment
 
     // If data is an empty array [], it means the connection works but the table is empty!
-    console.log("Database Response for ID", post_id, ":", data);
+    // console.log("Database Response for ID", post_id, ":", data);
 
     if (error) {
         console.error("Supabase Error:", error.message);
