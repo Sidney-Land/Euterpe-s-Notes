@@ -35,24 +35,7 @@ const handlePosting = async (e: React.FormEvent) => {
         } else {
             console.error("Supabase Error:", error.message);
             setMessage(`Supabase Error: ${error.message}`);
-            return null;
         }
-    }
-
-    if (authError) {
-      // If Supabase returns an error (e.g., email already exists, password too short)
-      
-    } else if (authData.user) {
-      // If data.user exists, the request was successful
-      setMessage('Success! Check your email for a confirmation link to activate your account.');
-      
-      // Optional: Clear the form fields on success
-      setEmail('');
-      setPassword('');
-      setUsername('');
-    } else {
-      // Fallback for unexpected cases
-      setMessage('Something went wrong. Please try again.');
     }
 
     setLoading(false);
@@ -100,7 +83,7 @@ return (
       
       <form onSubmit={handlePosting} style={FormStyle}>
         
-        {/* Username Input Group */}
+        {/* Title Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <label htmlFor="title" style={labelStyle}>Title</label>
           <input 
@@ -114,7 +97,7 @@ return (
           />
         </div>
 
-        {/* Email Input Group */}
+        {/* Music Link Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <label htmlFor="musicLink" style={labelStyle}>Music Link</label>
           <input 
@@ -127,14 +110,13 @@ return (
           />
         </div>
 
-        {/* Password Input Group */}
-        {/*the password minimum depends on if supabase's default minimum of 6 characters is active*/}
+        {/* Description/Content Input Group */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="content" style={labelStyle}></label>
+          <label htmlFor="content" style={labelStyle}>Description</label>
           <input 
             id="content"
             type="text" 
-            placeholder="At least 6 characters (optional)" 
+            placeholder="What do you love about this awesome track? (optional)" 
             value={content} 
             onChange={(e) => setContent(e.target.value)}  
             style={inputStyle}
