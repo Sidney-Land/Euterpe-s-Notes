@@ -1,6 +1,7 @@
 import React, { CSSProperties, Suspense } from 'react';
 import {Post, Profile} from '../lib/dbSchema'
 import { getPost } from '../lib/getData';
+import Link from "next/link";
 
 interface PostCardProps {}
 
@@ -85,8 +86,9 @@ const PostCard = async ({ postId }: { postId: string }) => {
       <div style = {titleStyle}>
         {post.title}
       </div>
-      <div></div>
-        {post.music_link}
+      <Link href={post.music_link} style={{ color: '#63b3ed', textDecoration: 'underline', fontWeight: 'bold' }}>
+        {post.music_link ? post.music_link : ''}
+      </Link>
       <div>
         {post.content}
       </div>
