@@ -22,7 +22,8 @@ export async function getPost(post_id: string) {
 export async function getAllPostIds() {
     const { data, error } = await supabase
         .from("post")
-        .select('post_id'); // We only need the IDs to start the map
+        .select('post_id') // We only need the IDs to start the map
+        .order('timestamp', { ascending: false }); // Ensures reverse chronological order
 
     if (error) {
         console.error("Error fetching IDs:", error);
