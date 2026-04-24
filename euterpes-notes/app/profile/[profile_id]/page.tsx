@@ -1,11 +1,12 @@
 import ProfilePage from "./ProfilePage";
 
 interface ProfileRoutePageProps {
-  params: {
-    profile_id: string;
-  };
+  params: Promise<{ profile_id: string }>; // Updated to Promise for newer Next.js compatibility
 }
 
-export default function ProfileRoutePage({ params }: ProfileRoutePageProps) {
-  return <ProfilePage profileId={decodeURIComponent(params.profile_id)} />;
+export default async function ProfileRoutePage({ params }: ProfileRoutePageProps) {
+  const resolvedParams = await params;
+  const profileId = decodeURIComponent(resolvedParams.profile_id);
+
+  return <ProfilePage profileId={profileId} />;
 }
