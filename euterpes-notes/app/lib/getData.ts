@@ -37,7 +37,8 @@ export async function getDisplayName(user_id: string) {
         .from("profile")
         .select('display_name')
         .eq('user_id', user_id)
-        .single()
+        .limit(1) // Force limit to avoid coercion errors
+        .maybeSingle();
 
     if(error) {
         console.error("Error fetching username: ", error);
@@ -47,12 +48,25 @@ export async function getDisplayName(user_id: string) {
     return data;
 }
 
-/*
-export async function getProfile(user_id: string) {
-    .from("profile")
-    .select('*')
-    .eq('user_id', user_id)
+export async function getProfile(identifier: string) {
+    if (!identifier || identifier === "username") return null; // Ignore the fallback string
 
-}*/
+    console.log("Searching for profile with identifier:", identifier);
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const isUUID = uuidRegex.test(identifier);
+
+    let query = supabase.from("profile").select('*');
+
+    if (isUUID) {
+        query = query.eq('user_id', identifier);
+    } else {
+        // Ensure this matches your column name exactly
+        query = query.eq('display_name', identifier); 
+    }
+
+    const { data, error } = await query.maybeSingle();
+    return data;
+}
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.

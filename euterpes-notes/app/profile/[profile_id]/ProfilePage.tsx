@@ -1,26 +1,52 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
+import { getProfile } from "../../lib/getData";
 
 interface ProfilePageProps {
   profileId: string;
 }
 
 export default function ProfilePage({ profileId }: ProfilePageProps) {
-  const username = profileId.trim().length > 0 ? profileId : "username";
   // Makes sidebar visible
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [displayName, setDisplayName] = useState(username);
+  const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("No bio yet");
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [headerImage, setHeaderImage] = useState<string | null>(null);
-  const [activeEditor, setActiveEditor] = useState<"name" | "bio" | null>(null);
-  const [draftName, setDraftName] = useState(username);
-  const [draftBio, setDraftBio] = useState("No bio yet");
   const profileInputRef = useRef<HTMLInputElement>(null);
   const headerInputRef = useRef<HTMLInputElement>(null);
+
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  // Edit states
+  const [activeEditor, setActiveEditor] = useState<"name" | "bio" | null>(null);
+  const [draftName, setDraftName] = useState("");
+  const [draftBio, setDraftBio] = useState("");
+
+  // data fetching logic
+  // Inside ProfilePage component
+  const [userUUID, setUserUUID] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadProfile() {
+      setLoading(true);
+      const data = await getProfile(profileId);
+      
+      if (data) {
+        setDisplayName(data.display_name || "New User");
+        setBio(data.bio || "No bio yet");
+        setUserUUID(data.user_id);
+        // Don't forget to update the edit drafts!
+        setDraftName(data.display_name || "New User");
+        setDraftBio(data.bio || "No bio yet");
+      }
+      setLoading(false);
+    }
+    loadProfile();
+  }, [profileId]);
 
   // Open and close handlers for edit
   const openEdit = () => setIsEditOpen(true);
@@ -82,11 +108,21 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     headerInputRef.current?.click();
   };
 
+  // Full-page loading state to prevent flickering "username" or empty fields
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black text-white">
+        <p className="animate-pulse text-lg text-gray-400">Loading Profile...</p>
+      </div>
+    );
+  }
+
   return (
     // Root page container.
     <div className="min-h-screen bg-black text-white">
       <TitleBar />
-      <SideBar mode="profile" profileId={username} />
+      {/* profileId here is the UUID from the URL params */}
+      <SideBar mode="profile" profileId={profileId} />
 
       {/* Main profile content area */}
       <div className="ml-[240px] pt-[10vh]">
@@ -118,10 +154,13 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
 
           <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4">
 
-            {/* Username */}
+            {/* Username/DisplayName Display */}
             <div className="min-w-0">
               <h1 className="text-2xl font-bold">{displayName}</h1>
-              <p className="text-gray-500">@{username}</p>
+              {/* We use toLowerCase and replace spaces to make it look like a handle */}
+              <p className="text-gray-500 text-sm">
+                @{displayName.toLowerCase().replace(/\s+/g, '')}
+              </p>
             </div>
 
             <div className="flex flex-col items-center justify-self-center">
@@ -143,14 +182,14 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
               </div>
 
               {/* Bio */}
-              <p className="text-sm text-gray-400 mt-4">{bio}</p>
+              <p className="mt-4 text-sm text-gray-400">{bio}</p>
 
             </div>
             {/* Edit Button */}
             <div className="flex justify-end">
               <button
                 onClick={openEdit}
-                className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 border border-gray-700 rounded shadow"
+                className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
               >
                 Edit
               </button>
@@ -159,11 +198,11 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
         </div>
 
         {/* Divider */}
-        <div className="border-t mt-6"></div>
+        <div className="mt-6 border-t"></div>
 
         {/* Posts Section */}
-        <div className="flex items-center justify-center h-96">
-          <p className="text-gray-400 text-lg">No Posts Yet</p>
+        <div className="flex h-96 items-center justify-center">
+          <p className="text-lg text-gray-400">No Posts Yet</p>
         </div>
       </div>
 
@@ -178,7 +217,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
 
       {/* Sidebar with edit options */}
       <aside
-        className={`fixed top-0 right-0 z-40 h-screen w-80 border-l border-zinc-800 bg-zinc-900 p-6 shadow-2xl transition-transform duration-300 ${
+        className={`fixed right-0 top-0 z-40 h-screen w-80 border-l border-zinc-800 bg-zinc-900 p-6 shadow-2xl transition-transform duration-300 ${
           isEditOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-label="Edit panel"
