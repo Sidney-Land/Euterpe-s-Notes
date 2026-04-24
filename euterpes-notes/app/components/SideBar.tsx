@@ -86,6 +86,13 @@ const SideBar = ({ mode = 'home' }: SideBarProps) => {
       <Link href="/" className="button">
         Recent Posts
       </Link>
+
+      {/* Create Post Link: Only shows when logged in  */}
+      {handle && (
+        <Link href="/note" className="button" style={{ marginBottom: '10px' }}>
+          Create Post
+        </Link>
+      )}
     </div>
   );
 };
