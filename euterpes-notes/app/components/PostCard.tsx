@@ -76,10 +76,10 @@ const PostCard = async ({ postId }: { postId: string }) => {
   //   category: 'Temp category'
   // };
 
-  // Outputs the timestamp in HH:MM MM/DD/YYYY format (using 24-hour time)
+  // Returns the timestamp in "HH:MM UTC MM/DD/YYYY" format (using 24-hour time for UTC timezone)
   function makeHumanReadable(timestamp: Post["timestamp"]) {
-    const parse = timestamp.split(/\D/);
-    return parse[3] + ":" + parse[4] + " " + parse[1] + "/" + parse[2] + "/" + parse[0]
+    const parse = timestamp.split(/\D/); // Splits raw timestamp by the non-digit (\D) characters
+    return parse[3] + ":" + parse[4] + " UTC " + parse[1] + "/" + parse[2] + "/" + parse[0]
   }
 
   return (
