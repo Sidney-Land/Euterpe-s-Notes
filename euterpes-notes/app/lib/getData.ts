@@ -61,12 +61,24 @@ export async function getProfile(identifier: string) {
     if (isUUID) {
         query = query.eq('user_id', identifier);
     } else {
-        // Ensure this matches your column name exactly
         query = query.eq('display_name', identifier); 
     }
 
     const { data, error } = await query.maybeSingle();
     return data;
+}
+
+export async function updateProfile(userId: string, updates: { display_name?: string, bio?: string }) {
+    const { data, error } = await supabase
+        .from('profile')
+        .update(updates)
+        .eq('user_id', userId); //The 'eq' ensures they can only edit their own ID
+
+    if (error) {
+        console.error("Error updating profile:", error.message);
+        return { success: false, error };
+    }
+    return { success: true, data };
 }
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.

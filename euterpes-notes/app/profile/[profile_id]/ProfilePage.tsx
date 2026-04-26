@@ -3,7 +3,8 @@
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
-import { getProfile } from "../../lib/getData";
+import { getProfile, updateProfile } from "../../lib/getData";
+import { supabase } from '../../lib/supabaseClient';
 
 interface ProfilePageProps {
   profileId: string;
@@ -26,26 +27,34 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
   const [draftName, setDraftName] = useState("");
   const [draftBio, setDraftBio] = useState("");
 
-  // data fetching logic
-  // Inside ProfilePage component
   const [userUUID, setUserUUID] = useState<string | null>(null);
 
+  // Inside ProfilePage component
+  const [isOwner, setIsOwner] = useState(false); 
+
   useEffect(() => {
-    async function loadProfile() {
-      setLoading(true);
-      const data = await getProfile(profileId);
-      
-      if (data) {
-        setDisplayName(data.display_name || "New User");
-        setBio(data.bio || "No bio yet");
-        setUserUUID(data.user_id);
-        // Don't forget to update the edit drafts!
-        setDraftName(data.display_name || "New User");
-        setDraftBio(data.bio || "No bio yet");
+      async function loadProfile() {
+        setLoading(true);
+        const data = await getProfile(profileId);
+        
+        // Get current session to check ownership
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (data) {
+          setDisplayName(data.display_name || "New User");
+          setBio(data.bio || "No bio yet");
+          setUserUUID(data.user_id);
+          setDraftName(data.display_name || "New User");
+          setDraftBio(data.bio || "No bio yet");
+
+          // Check if the profile we loaded belongs to the logged-in user
+          if (session?.user && session.user.id === data.user_id) {
+            setIsOwner(true);
+          }
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    }
-    loadProfile();
+      loadProfile();
   }, [profileId]);
 
   // Open and close handlers for edit
@@ -67,18 +76,34 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     setActiveEditor("bio");
   };
 
-  const saveName = () => {
+  const saveName = async () => {
     const nextName = draftName.trim();
-    if (nextName.length > 0) {
-      setDisplayName(nextName);
+    if (nextName.length > 0 && userUUID) {
+      const { success } = await updateProfile(userUUID, { display_name: nextName });
+      if (success) {
+        setDisplayName(nextName);
+        setActiveEditor(null);
+        // RELOAD to the new URL so the page doesn't break on refresh
+        window.location.href = `/profile/${encodeURIComponent(nextName)}`;
+      }
     }
-    setActiveEditor(null);
   };
 
-  const saveBio = () => {
+  const saveBio = async () => {
+    console.log("bio update started")
     const nextBio = draftBio.trim();
-    setBio(nextBio.length > 0 ? nextBio : "No bio yet");
-    setActiveEditor(null);
+    if (userUUID) {
+      const { success } = await updateProfile(userUUID, { bio: nextBio });
+      if (success) {
+        console.log("success statement passed")
+        setBio(nextBio.length > 0 ? nextBio : "No bio yet");
+        console.log("Bio: ", nextBio)
+        setActiveEditor(null);
+        // Optional: alert("Bio updated!"); 
+      } else {
+        console.error("Database update failed");
+      }
+    }
   };
 
   const onImageSelected = (
@@ -187,12 +212,14 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
             </div>
             {/* Edit Button */}
             <div className="flex justify-end">
-              <button
-                onClick={openEdit}
-                className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
-              >
-                Edit
-              </button>
+              {isOwner && (
+                <button
+                  onClick={openEdit}
+                  className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
+                >
+                  Edit
+                </button>
+              )}
             </div>
           </div>
         </div>
