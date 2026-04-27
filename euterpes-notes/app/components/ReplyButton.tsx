@@ -19,7 +19,9 @@ export default function ReplyButton() {
         <><button className="button" onClick={handleReplying}>{!replying ? "Reply" : "Close"}</button>
         <div>
             {replying && (
-                <CreatePost />
+                <CreatePost 
+                    
+                />
             )}
         </div></>
         
