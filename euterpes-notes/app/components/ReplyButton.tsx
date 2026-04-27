@@ -3,7 +3,11 @@
 import React, { CSSProperties, useState } from 'react';
 import CreatePost from './CreatePost';
 
-export default function ReplyButton() {
+interface ReplyButtonProps {
+    parent_id: string | null
+}
+
+export default function ReplyButton({ parent_id }: ReplyButtonProps) {
     const [replying, setReplying] = useState(false);
     
     const handleReplying = async (e: React.FormEvent) => {
@@ -20,7 +24,7 @@ export default function ReplyButton() {
         <div>
             {replying && (
                 <CreatePost 
-                    
+                    parent_id={parent_id}
                 />
             )}
         </div></>

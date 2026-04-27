@@ -100,7 +100,9 @@ const PostCard = async ({ postId }: { postId: string }) => {
         {post.content}
       </div>
       <div>
-        <ReplyButton/>
+        <ReplyButton
+          parent_id={postId}
+        />
       </div>
     </div>
     

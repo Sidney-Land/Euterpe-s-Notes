@@ -4,7 +4,11 @@ import { supabase } from '../lib/supabaseClient';
 import React, { CSSProperties } from 'react';
 import Link from "next/link";
 
-export default function CreatePost() {
+interface CreatePostProps {
+  parent_id: string | null
+}
+
+export default function CreatePost({ parent_id }: CreatePostProps) {
   const [title, setTitle] = useState('');
   const [musicLink, setMusicLink] = useState('');
   const [content, setContent] = useState('');
@@ -23,7 +27,7 @@ const handlePosting = async (e: React.FormEvent) => {
 
         const { data, error } = await supabase
             .from("post") 
-            .insert({title: title, music_link: musicLink, content: content, poster_id: poster_id})
+            .insert({title: title, music_link: musicLink, content: content, parent_id: parent_id, poster_id: poster_id})
 
         if (!error) {
             setMessage('Success! Check your profile or the Recent Posts feed to see your post!');
