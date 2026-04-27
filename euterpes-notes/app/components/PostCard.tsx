@@ -1,7 +1,8 @@
-import React, { CSSProperties, Suspense } from 'react';
+import React, { CSSProperties } from 'react';
 import {Post, Profile} from '../lib/dbSchema'
 import { getPost } from '../lib/getData';
 import Link from "next/link";
+import ReplyButton  from './ReplyButton';
 
 interface PostCardProps {}
 
@@ -97,6 +98,9 @@ const PostCard = async ({ postId }: { postId: string }) => {
       </Link>
       <div>
         {post.content}
+      </div>
+      <div>
+        <ReplyButton/>
       </div>
     </div>
     
