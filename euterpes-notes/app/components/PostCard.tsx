@@ -1,3 +1,5 @@
+'use cache';
+import { cacheLife } from 'next/cache'
 import React, { CSSProperties, Suspense } from 'react';
 import {Post, Profile} from '../lib/dbSchema'
 import { getPost } from '../lib/getData';
@@ -6,6 +8,8 @@ import Link from "next/link";
 interface PostCardProps {}
 
 const PostCard = async ({ postId }: { postId: string }) => {
+  cacheLife('max');
+
   //CSSProperties functions as an autocomplete for CSS rules
   const cardStyle: CSSProperties = {
     //**style of the card**

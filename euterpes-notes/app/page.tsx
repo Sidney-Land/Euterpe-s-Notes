@@ -1,3 +1,5 @@
+'use cache';
+import { cacheLife } from 'next/cache'
 import Image from "next/image";
 //imports the component I made -Tyler
 import PostCard from "./components/PostCard"
@@ -8,6 +10,7 @@ import { getAllPostIds } from "./lib/getData";
 
 
 export default async function Home() {
+  cacheLife('minutes'); // Homepage post feed is cached according to next.config.ts's minutes profile (See cacheLife API reference)
 
   //Fetches the actual IDs from the database
   const posts = await getAllPostIds();
