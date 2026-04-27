@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, SUSE_Mono } from "next/font/google";
 import "./globals.css";
 import TitleBar from "./components/TitleBar";
 import SideBar from "./components/SideBar";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,8 +38,9 @@ export default function RootLayout({
             {/* This is where your Home Page (page.tsx) 
               or any other page will be "injected" 
             */}
-            
-            {children}
+            <Suspense fallback={<h1>Loading...</h1>}>
+              {children}
+            </Suspense>
           </main>
         </div>
       </body>
