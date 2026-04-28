@@ -4,6 +4,7 @@ import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
 import { getProfile } from "../../lib/getData";
+import { supabase } from "../../lib/supabaseClient"
 
 interface ProfilePageProps {
   profileId: string;
@@ -73,13 +74,39 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
       setDisplayName(nextName);
     }
     setActiveEditor(null);
+
+    storeName(nextName);
   };
 
   const saveBio = () => {
     const nextBio = draftBio.trim();
     setBio(nextBio.length > 0 ? nextBio : "No bio yet");
     setActiveEditor(null);
+
+    storeBio(nextBio);
   };
+
+  async function storeName(newName: string) {
+    const { error } = await supabase
+            .from("profile")
+            .update({display_name: newName})
+            .eq('user_id', userUUID)
+    
+    if (error) {
+        console.error("Error storing name in Database:", error);
+    }
+  }
+
+  async function storeBio(newBio: string) {
+    const { error } = await supabase
+            .from('profile')
+            .update({bio: newBio})
+            .eq('user_id', userUUID)
+    
+    if (error) {
+        console.error("Error storing bio in Database:", error);
+    }
+  }
 
   const onImageSelected = (
     event: ChangeEvent<HTMLInputElement>,
