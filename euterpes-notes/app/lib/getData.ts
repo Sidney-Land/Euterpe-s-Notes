@@ -57,3 +57,53 @@ export async function getProfile(user_id: string) {
 }*/
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.
+
+export async function getMyPosts(user_id: string) { //Get all of a user's posts
+
+    const {data, error} = await supabase
+        .from('post')
+        .select('*')
+        .eq('poster_id', user_id)
+        .order('timestamp')
+
+    if(error) {
+
+        console.error("Error fetching mypost: ", error);
+        return null;
+    }
+
+    return data;
+}
+
+export async function getBio(user_id: string) { //Get a user's bio
+
+    const {data, error} = await supabase
+        .from('profile')
+        .select('bio')
+        .eq('user_id', user_id)
+        .limit(1) //Make sure nothing funky happens
+
+    if(error) {
+
+        console.error("Error fetching bio: ", error);
+        return null;
+    }
+
+    return data;
+}
+
+export async function getFollowedList(user_id: string) {
+
+    const {data, error} = await supabase
+        .from('following')
+        .select('followed_id')
+        .eq('user_id', user_id)
+
+    if(error) {
+
+        console.error("Error fetching followed list: ", error);
+        return null;
+    }
+
+    return data;
+}
