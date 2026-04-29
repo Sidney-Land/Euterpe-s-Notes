@@ -21,13 +21,14 @@ const SideBar = ({ mode = 'home' }: SideBarProps) => {
       setHandle(null);
       return;
     }
+    setHandle(userId);
     
-    const result = await getDisplayName(userId);
+    /*const result = await getDisplayName(userId);
     if (result && result.display_name) {
       setHandle(result.display_name);
     } else {
       setHandle(userId); // Fallback to ID
-    }
+    }*/
   }
 
   // 2. Run the initial check

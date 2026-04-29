@@ -54,19 +54,17 @@ export async function getProfile(identifier: string) {
 
     console.log("Searching for profile with identifier:", identifier);
 
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    const isUUID = uuidRegex.test(identifier);
+    const { data, error } = await supabase
+        .from("profile")
+        .select('*')
+        .eq('user_id', identifier)
+        .maybeSingle();
 
-    let query = supabase.from("profile").select('*');
-
-    if (isUUID) {
-        query = query.eq('user_id', identifier);
-    } else {
-        // Ensure this matches your column name exactly
-        query = query.eq('display_name', identifier); 
+    if (error) {
+        console.error("Error fetching profile: ", error);
+        return null;
     }
 
-    const { data, error } = await query.maybeSingle();
     return data;
 }
 //calls get requests for each individual post. should swap this to a batch fetch method later.
