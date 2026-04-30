@@ -31,6 +31,13 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
   // Inside ProfilePage component
   const [userUUID, setUserUUID] = useState<string | null>(null);
 
+  // UUID of the user viewing the profile
+  const [viewerUUID, setViewerUUID] = useState<string | null>(null);
+
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) setViewerUUID(session.user.id);
+  });
+
   useEffect(() => {
     async function loadProfile() {
       setLoading(true);
@@ -106,6 +113,16 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     if (error) {
         console.error("Error storing bio in Database:", error);
     }
+  } 
+
+  async function followProfile() {
+    const { error } = await supabase
+      .from('following')
+      .insert({user_id: viewerUUID, followed_id: userUUID})
+    
+    if (error) {
+      console.error("Error following profile:", error);
+    }
   }
 
   const onImageSelected = (
@@ -143,7 +160,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
       </div>
     );
   }
-
+console.log(viewerUUID);
   return (
     // Root page container.
     <div className="min-h-screen bg-black text-white">
@@ -213,14 +230,26 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
 
             </div>
             {/* Edit Button */}
-            <div className="flex justify-end">
-              <button
-                onClick={openEdit}
-                className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
-              >
-                Edit
-              </button>
-            </div>
+            {(viewerUUID === null) ? <div></div> :
+            (viewerUUID && viewerUUID === userUUID) ?
+              <div className="flex justify-end">
+                <button
+                  onClick={openEdit}
+                  className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
+                >
+                  Edit
+                </button>
+              </div>
+              :
+              <div>
+                <button
+                  onClick={followProfile}
+                  className="button"
+                >
+                  Follow
+                </button>
+              </div>
+            }
           </div>
         </div>
 
