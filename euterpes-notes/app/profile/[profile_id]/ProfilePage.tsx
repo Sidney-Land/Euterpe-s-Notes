@@ -3,8 +3,9 @@
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
-import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile } from "../../lib/getData";
-import { supabase } from "../../lib/supabaseClient"
+import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile, updateProfile } from "../../lib/getData";
+import { supabase } from '../../lib/supabaseClient';
+import { getImageUrl, uploadImage }from '../../lib/storage';
 
 interface ProfilePageProps {
   profileId: string;
@@ -29,20 +30,20 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
   const [draftName, setDraftName] = useState("");
   const [draftBio, setDraftBio] = useState("");
 
-  // data fetching logic
-  // Inside ProfilePage component
   const [userUUID, setUserUUID] = useState<string | null>(null);
 
+  const [isOwner, setIsOwner] = useState(false); 
   // UUID of the user viewing the profile
   const [viewerUUID, setViewerUUID] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
-
-  useEffect(() => {
+  
+useEffect(() => {
     async function loadProfile() {
       setLoading(true);
       const data = await getProfile(profileId);
       const follower = await getFollowerCount(profileId);
       const following = await getFollowingCount(profileId);
+      const { data: { session } } = await supabase.auth.getSession();
       
       if (data) {
         setDisplayName(data.display_name || "New User");
@@ -51,6 +52,16 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
         // Don't forget to update the edit drafts!
         setDraftName(data.display_name || "New User");
         setDraftBio(data.bio || "No bio yet");    
+        
+        // Fetch existing images from storage
+        const avatar = await getImageUrl(data.user_id, 'avatar');
+        const banner = await getImageUrl(data.user_id, 'banner');
+        setProfileImage(avatar);
+        setHeaderImage(banner);
+
+        if (session?.user && session.user.id === data.user_id) {
+          setIsOwner(true);
+        }
       }
 
       if (follower) {
@@ -72,7 +83,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
       setLoading(false);
     }
     loadProfile();
-  }, [profileId]);
+}, [profileId]);
 
   // Open and close handlers for edit
   const openEdit = () => setIsEditOpen(true);
@@ -93,17 +104,24 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     setActiveEditor("bio");
   };
 
-  const saveName = () => {
+  const saveName = async () => {
     const nextName = draftName.trim();
-    if (nextName.length > 0) {
-      setDisplayName(nextName);
+    if (nextName.length > 0 && userUUID) {
+      const { success } = await updateProfile(userUUID, { display_name: nextName });
+      if (success) {
+        setDisplayName(nextName);
+        setActiveEditor(null);
+        // RELOAD to the new URL so the page doesn't break on refresh
+        window.location.href = `/profile/${encodeURIComponent(nextName)}`;
+      }
     }
     setActiveEditor(null);
 
     storeName(nextName);
   };
 
-  const saveBio = () => {
+  const saveBio = async () => {
+    console.log("bio update started")
     const nextBio = draftBio.trim();
     setBio(nextBio.length > 0 ? nextBio : "No bio yet");
     setActiveEditor(null);
@@ -160,24 +178,37 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     }
   }
 
-  const onImageSelected = (
-    event: ChangeEvent<HTMLInputElement>,
-    onComplete: (result: string) => void,
-  ) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile || !selectedFile.type.startsWith("image/")) {
-      return;
-    }
+// Inside your ProfilePage component
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        onComplete(reader.result);
-      }
-    };
-    reader.readAsDataURL(selectedFile);
-    event.target.value = "";
-  };
+const onImageSelected = async (
+  event: ChangeEvent<HTMLInputElement>,
+  type: 'avatar' | 'banner'
+) => {
+  const file = event.target.files?.[0];
+  if (!file || !userUUID) return;
+
+  try {
+    const publicUrl = await uploadImage(userUUID, file, type);
+    
+    // Create the update object based on the type
+    const updates = type === 'avatar' 
+      ? { avatar_url: publicUrl } 
+      : { banner_url: publicUrl };
+
+    // Now updateProfile will accept this object
+    const { success } = await updateProfile(userUUID, updates);
+
+    if (success) {
+      if (type === 'avatar') setProfileImage(publicUrl);
+      else setHeaderImage(publicUrl);
+    }
+  } catch (err: any) {
+    console.error("Upload error:", err);
+    alert(err.message || "Failed to upload image");
+  } finally {
+    event.target.value = ""; 
+  }
+};
 
   const triggerProfileUpload = () => {
     profileInputRef.current?.click();
@@ -236,14 +267,12 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
             {/* Username/DisplayName Display */}
             <div className="min-w-0">
               <h1 className="text-2xl font-bold">{displayName}</h1>
-              {/* We use toLowerCase and replace spaces to make it look like a handle */}
               <p className="text-gray-500 text-sm">
                 @{displayName.toLowerCase().replace(/\s+/g, '')}
               </p>
             </div>
 
             <div className="flex flex-col items-center justify-self-center">
-
               {/* Stats */}
               <div className="flex space-x-16 text-center">
                 <div>
@@ -262,41 +291,36 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
 
               {/* Bio */}
               <p className="mt-4 text-sm text-gray-400">{bio}</p>
-
             </div>
-            {/* Edit Button */}
-            {(viewerUUID === null) ? <div></div> :
-            (viewerUUID === userUUID) ?
-              <div className="flex justify-end">
-                <button
-                  onClick={openEdit}
-                  className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
-                >
-                  Edit
-                </button>
-              </div>
-              :
-              (isFollowing) ?
-                <div>
+
+            {/* Action Buttons: Edit or Follow/Unfollow */}
+            <div className="flex justify-end">
+              {viewerUUID && (
+                viewerUUID === userUUID ? (
+                  /* Owner View: Show Edit Button */
                   <button
-                    onClick={unFollowProfile}
-                    className="button"
+                    onClick={openEdit}
+                    className="rounded border border-gray-700 bg-black px-4 py-2 font-semibold text-white shadow hover:bg-gray-800"
                   >
-                    Unfollow
-                  </button></div>
-                :
-                <div>
-                  <button
-                    onClick={followProfile}
-                    className="button"
-                  >
-                    Follow
+                    Edit
                   </button>
-                </div>
-              }
+                ) : (
+                  /* Visitor View: Show Follow/Unfollow Button */
+                  <button
+                    onClick={isFollowing ? unFollowProfile : followProfile}
+                    className={`rounded px-4 py-2 font-semibold shadow transition ${
+                      isFollowing 
+                        ? "border border-gray-700 bg-zinc-900 text-white hover:bg-zinc-800" 
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
+                  >
+                    {isFollowing ? "Unfollow" : "Follow"}
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
-
         {/* Divider */}
         <div className="mt-6 border-t"></div>
 
@@ -421,14 +445,14 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(event) => onImageSelected(event, setProfileImage)}
+          onChange={(e) => onImageSelected(e, 'avatar')}
         />
         <input
           ref={headerInputRef}
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(event) => onImageSelected(event, setHeaderImage)}
+          onChange={(e) => onImageSelected(e, 'banner')}
         />
       </aside>
       </div>

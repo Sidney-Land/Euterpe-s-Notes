@@ -114,5 +114,31 @@ export async function getFollowingCount(user_id: string) {
     return count;
 }
 
+// lib/getData.ts
+
+export async function updateProfile(
+  userId: string, 
+  updates: { 
+    display_name?: string, 
+    bio?: string, 
+    avatar_url?: string, // Add this
+    banner_url?: string  // Add this
+  }
+) {
+  console.log("Attempting update for:", userId, "with data:", updates);
+
+  const { data, error, status } = await supabase
+    .from('profile')
+    .update(updates)
+    .eq('user_id', userId)
+    .select();
+
+  if (error) {
+    console.error("Supabase Error:", error.message, "Status:", status);
+    return { success: false, error };
+  }
+
+  return { success: true, data: data?.[0] };
+}
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.
