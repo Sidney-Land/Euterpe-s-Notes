@@ -3,7 +3,7 @@
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
-import { getFollowedStatus, getProfile } from "../../lib/getData";
+import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile } from "../../lib/getData";
 import { supabase } from "../../lib/supabaseClient"
 
 interface ProfilePageProps {
@@ -15,6 +15,8 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("No bio yet");
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [headerImage, setHeaderImage] = useState<string | null>(null);
   const profileInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +41,8 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     async function loadProfile() {
       setLoading(true);
       const data = await getProfile(profileId);
+      const follower = await getFollowerCount(profileId);
+      const following = await getFollowingCount(profileId);
       
       if (data) {
         setDisplayName(data.display_name || "New User");
@@ -49,9 +53,18 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
         setDraftBio(data.bio || "No bio yet");    
       }
 
+      if (follower) {
+        setFollowerCount(follower);
+      }
+
+      if (following) {
+        setFollowingCount(following);
+      }
+
       supabase.auth.getSession().then( async ({ data: { session } }) => {
         if (session) {
           setViewerUUID(session.user.id);
+          
           setIsFollowing(await getFollowedStatus(session.user.id, profileId));
         }
       });
@@ -128,6 +141,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     if (error) {
       console.error("Error following profile:", error);
     } else {
+      setFollowerCount(followerCount + 1);
       setIsFollowing(true);
     }
   }
@@ -141,6 +155,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     if (error) {
       console.error("Error unfollowing profile:", error);
     } else {
+      setFollowerCount(followerCount - 1);
       setIsFollowing(false);
     }
   }
@@ -236,11 +251,11 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
                   <p className="text-gray-400">Posts</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-lg">0</p>
+                  <p className="font-semibold text-lg">{followerCount}</p>
                   <p className="text-gray-400">Followers</p>
                 </div>
                 <div>
-                  <p className="font-semibold text-lg">0</p>
+                  <p className="font-semibold text-lg">{followingCount}</p>
                   <p className="text-gray-400">Following</p>
                 </div>
               </div>

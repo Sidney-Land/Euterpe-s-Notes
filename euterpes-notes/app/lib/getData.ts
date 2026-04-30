@@ -70,9 +70,9 @@ export async function getProfile(identifier: string) {
 
 export async function getFollowedStatus(user_id: string, followed_id: string) {
 
-    const { error } = await supabase
+    const { count, error } = await supabase
         .from('following')
-        .select('*', { head: true })
+        .select('*', { count: 'exact', head: true })
         .eq('user_id', user_id)
         .eq('followed_id', followed_id)
 
@@ -81,7 +81,37 @@ export async function getFollowedStatus(user_id: string, followed_id: string) {
         return false;
     }
 
-    return true;
+    return count ? true : false; // number into boolean coersion
+}
+
+export async function getFollowerCount(user_id: string) {
+
+    const { count, error } = await supabase
+        .from('following')
+        .select('*', { count: 'exact', head: true })
+        .eq('followed_id', user_id)
+
+    if (error) {
+        console.error("Error fetching follower count: ", error);
+        return null;
+    }
+
+    return count;
+}
+
+export async function getFollowingCount(user_id: string) {
+
+    const { count, error } = await supabase
+        .from('following')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user_id)
+
+    if (error) {
+        console.error("Error fetching following count: ", error);
+        return null;
+    }
+
+    return count;
 }
 
 //calls get requests for each individual post. should swap this to a batch fetch method later.
