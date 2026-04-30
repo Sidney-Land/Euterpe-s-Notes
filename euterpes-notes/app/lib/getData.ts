@@ -67,5 +67,22 @@ export async function getProfile(identifier: string) {
 
     return data;
 }
+
+export async function getFollowedStatus(user_id: string, followed_id: string) {
+
+    const { error } = await supabase
+        .from('following')
+        .select('*', { head: true })
+        .eq('user_id', user_id)
+        .eq('followed_id', followed_id)
+
+    if (error) {
+        console.error("Error fetching following status: ", error);
+        return false;
+    }
+
+    return true;
+}
+
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.

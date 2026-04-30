@@ -3,7 +3,7 @@
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
-import { getProfile } from "../../lib/getData";
+import { getFollowedStatus, getProfile } from "../../lib/getData";
 import { supabase } from "../../lib/supabaseClient"
 
 interface ProfilePageProps {
@@ -33,10 +33,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
 
   // UUID of the user viewing the profile
   const [viewerUUID, setViewerUUID] = useState<string | null>(null);
-
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (session) setViewerUUID(session.user.id);
-  });
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     async function loadProfile() {
@@ -49,8 +46,16 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
         setUserUUID(data.user_id);
         // Don't forget to update the edit drafts!
         setDraftName(data.display_name || "New User");
-        setDraftBio(data.bio || "No bio yet");
+        setDraftBio(data.bio || "No bio yet");    
       }
+
+      supabase.auth.getSession().then( async ({ data: { session } }) => {
+        if (session) {
+          setViewerUUID(session.user.id);
+          setIsFollowing(await getFollowedStatus(session.user.id, profileId));
+        }
+      });
+
       setLoading(false);
     }
     loadProfile();
@@ -122,6 +127,21 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     
     if (error) {
       console.error("Error following profile:", error);
+    } else {
+      setIsFollowing(true);
+    }
+  }
+
+  async function unFollowProfile() {
+    const {error} = await supabase
+      .from('following')
+      .delete()
+      .eq('user_id', viewerUUID)
+
+    if (error) {
+      console.error("Error unfollowing profile:", error);
+    } else {
+      setIsFollowing(false);
     }
   }
 
@@ -160,7 +180,7 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
       </div>
     );
   }
-console.log(viewerUUID);
+
   return (
     // Root page container.
     <div className="min-h-screen bg-black text-white">
@@ -231,7 +251,7 @@ console.log(viewerUUID);
             </div>
             {/* Edit Button */}
             {(viewerUUID === null) ? <div></div> :
-            (viewerUUID && viewerUUID === userUUID) ?
+            (viewerUUID === userUUID) ?
               <div className="flex justify-end">
                 <button
                   onClick={openEdit}
@@ -241,15 +261,24 @@ console.log(viewerUUID);
                 </button>
               </div>
               :
-              <div>
-                <button
-                  onClick={followProfile}
-                  className="button"
-                >
-                  Follow
-                </button>
-              </div>
-            }
+              (isFollowing) ?
+                <div>
+                  <button
+                    onClick={unFollowProfile}
+                    className="button"
+                  >
+                    Unfollow
+                  </button></div>
+                :
+                <div>
+                  <button
+                    onClick={followProfile}
+                    className="button"
+                  >
+                    Follow
+                  </button>
+                </div>
+              }
           </div>
         </div>
 
