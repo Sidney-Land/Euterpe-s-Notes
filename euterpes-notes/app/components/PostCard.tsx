@@ -1,10 +1,15 @@
+'use cache';
+import { cacheLife } from 'next/cache'
 import React, { CSSProperties, Suspense } from 'react';
 import {Post, Profile} from '../lib/dbSchema'
 import { getPost } from '../lib/getData';
+import Link from "next/link";
 
 interface PostCardProps {}
 
 const PostCard = async ({ postId }: { postId: string }) => {
+  cacheLife('max');
+
   //CSSProperties functions as an autocomplete for CSS rules
   const cardStyle: CSSProperties = {
     //**style of the card**
@@ -75,18 +80,25 @@ const PostCard = async ({ postId }: { postId: string }) => {
   //   category: 'Temp category'
   // };
 
+  // Returns the timestamp in "HH:MM UTC MM/DD/YYYY" format (using 24-hour time for UTC timezone)
+  function makeHumanReadable(timestamp: Post["timestamp"]) {
+    const parse = timestamp.split(/\D/); // Splits raw timestamp by the non-digit (\D) characters
+    return parse[3] + ":" + parse[4] + " UTC " + parse[1] + "/" + parse[2] + "/" + parse[0]
+  }
+
   return (
     //className imports the given style from globals.css
       <div className= "component-style" style = {cardStyle} >
       <div style={headerStyle}>
         <strong>{post.profile.display_name}</strong>
-        <span>{post.timestamp}</span>
+        <span>{makeHumanReadable(post.timestamp)}</span>
       </div>
       <div style = {titleStyle}>
         {post.title}
       </div>
-      <div></div>
-        {post.music_link}
+      <Link href={post.music_link} style={{ color: '#63b3ed', textDecoration: 'underline', fontWeight: 'bold' }}>
+        {post.music_link ? post.music_link : ''}
+      </Link>
       <div>
         {post.content}
       </div>

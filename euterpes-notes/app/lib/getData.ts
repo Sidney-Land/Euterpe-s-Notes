@@ -9,7 +9,7 @@ export async function getPost(post_id: string) {
         .eq('post_id', post_id); // Remove .single() for a moment
 
     // If data is an empty array [], it means the connection works but the table is empty!
-    console.log("Database Response for ID", post_id, ":", data);
+    // console.log("Database Response for ID", post_id, ":", data);
 
     if (error) {
         console.error("Supabase Error:", error.message);
@@ -22,7 +22,8 @@ export async function getPost(post_id: string) {
 export async function getAllPostIds() {
     const { data, error } = await supabase
         .from("post")
-        .select('post_id'); // We only need the IDs to start the map
+        .select('post_id') // We only need the IDs to start the map
+        .order('timestamp', { ascending: false }); // Ensures reverse chronological order
 
     if (error) {
         console.error("Error fetching IDs:", error);
@@ -53,18 +54,17 @@ export async function getProfile(identifier: string) {
 
     console.log("Searching for profile with identifier:", identifier);
 
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    const isUUID = uuidRegex.test(identifier);
+    const { data, error } = await supabase
+        .from("profile")
+        .select('*')
+        .eq('user_id', identifier)
+        .maybeSingle();
 
-    let query = supabase.from("profile").select('*');
-
-    if (isUUID) {
-        query = query.eq('user_id', identifier);
-    } else {
-        query = query.eq('display_name', identifier); 
+    if (error) {
+        console.error("Error fetching profile: ", error);
+        return null;
     }
 
-    const { data, error } = await query.maybeSingle();
     return data;
 }
 

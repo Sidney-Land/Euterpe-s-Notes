@@ -87,24 +87,41 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
         window.location.href = `/profile/${encodeURIComponent(nextName)}`;
       }
     }
+    setActiveEditor(null);
+
+    storeName(nextName);
   };
 
   const saveBio = async () => {
     console.log("bio update started")
     const nextBio = draftBio.trim();
-    if (userUUID) {
-      const { success } = await updateProfile(userUUID, { bio: nextBio });
-      if (success) {
-        console.log("success statement passed")
-        setBio(nextBio.length > 0 ? nextBio : "No bio yet");
-        console.log("Bio: ", nextBio)
-        setActiveEditor(null);
-        // Optional: alert("Bio updated!"); 
-      } else {
-        console.error("Database update failed");
-      }
-    }
+    setBio(nextBio.length > 0 ? nextBio : "No bio yet");
+    setActiveEditor(null);
+
+    storeBio(nextBio);
   };
+
+  async function storeName(newName: string) {
+    const { error } = await supabase
+            .from("profile")
+            .update({display_name: newName})
+            .eq('user_id', userUUID)
+    
+    if (error) {
+        console.error("Error storing name in Database:", error);
+    }
+  }
+
+  async function storeBio(newBio: string) {
+    const { error } = await supabase
+            .from('profile')
+            .update({bio: newBio})
+            .eq('user_id', userUUID)
+    
+    if (error) {
+        console.error("Error storing bio in Database:", error);
+    }
+  }
 
   const onImageSelected = (
     event: ChangeEvent<HTMLInputElement>,
