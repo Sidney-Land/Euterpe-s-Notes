@@ -5,6 +5,7 @@ import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
 import { getProfile, updateProfile } from "../../lib/getData";
 import { supabase } from '../../lib/supabaseClient';
+import { getImageUrl, uploadImage }from '../../lib/storage';
 
 interface ProfilePageProps {
   profileId: string;
@@ -32,30 +33,31 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
   // Inside ProfilePage component
   const [isOwner, setIsOwner] = useState(false); 
 
-  useEffect(() => {
-      async function loadProfile() {
-        setLoading(true);
-        const data = await getProfile(profileId);
+useEffect(() => {
+    async function loadProfile() {
+      setLoading(true);
+      const data = await getProfile(profileId);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (data) {
+        setDisplayName(data.display_name || "New User");
+        setBio(data.bio || "No bio yet");
+        setUserUUID(data.user_id);
         
-        // Get current session to check ownership
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (data) {
-          setDisplayName(data.display_name || "New User");
-          setBio(data.bio || "No bio yet");
-          setUserUUID(data.user_id);
-          setDraftName(data.display_name || "New User");
-          setDraftBio(data.bio || "No bio yet");
+        // Fetch existing images from storage
+        const avatar = await getImageUrl(data.user_id, 'avatar');
+        const banner = await getImageUrl(data.user_id, 'banner');
+        setProfileImage(avatar);
+        setHeaderImage(banner);
 
-          // Check if the profile we loaded belongs to the logged-in user
-          if (session?.user && session.user.id === data.user_id) {
-            setIsOwner(true);
-          }
+        if (session?.user && session.user.id === data.user_id) {
+          setIsOwner(true);
         }
-        setLoading(false);
       }
-      loadProfile();
-  }, [profileId]);
+      setLoading(false);
+    }
+    loadProfile();
+}, [profileId]);
 
   // Open and close handlers for edit
   const openEdit = () => setIsEditOpen(true);
@@ -123,24 +125,37 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
     }
   }
 
-  const onImageSelected = (
-    event: ChangeEvent<HTMLInputElement>,
-    onComplete: (result: string) => void,
-  ) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile || !selectedFile.type.startsWith("image/")) {
-      return;
-    }
+// Inside your ProfilePage component
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        onComplete(reader.result);
-      }
-    };
-    reader.readAsDataURL(selectedFile);
-    event.target.value = "";
-  };
+const onImageSelected = async (
+  event: ChangeEvent<HTMLInputElement>,
+  type: 'avatar' | 'banner'
+) => {
+  const file = event.target.files?.[0];
+  if (!file || !userUUID) return;
+
+  try {
+    const publicUrl = await uploadImage(userUUID, file, type);
+    
+    // Create the update object based on the type
+    const updates = type === 'avatar' 
+      ? { avatar_url: publicUrl } 
+      : { banner_url: publicUrl };
+
+    // Now updateProfile will accept this object
+    const { success } = await updateProfile(userUUID, updates);
+
+    if (success) {
+      if (type === 'avatar') setProfileImage(publicUrl);
+      else setHeaderImage(publicUrl);
+    }
+  } catch (err: any) {
+    console.error("Upload error:", err);
+    alert(err.message || "Failed to upload image");
+  } finally {
+    event.target.value = ""; 
+  }
+};
 
   const triggerProfileUpload = () => {
     profileInputRef.current?.click();
@@ -365,14 +380,14 @@ export default function ProfilePage({ profileId }: ProfilePageProps) {
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(event) => onImageSelected(event, setProfileImage)}
+          onChange={(e) => onImageSelected(e, 'avatar')}
         />
         <input
           ref={headerInputRef}
           type="file"
           accept="image/*"
           className="hidden"
-          onChange={(event) => onImageSelected(event, setHeaderImage)}
+          onChange={(e) => onImageSelected(e, 'banner')}
         />
       </aside>
       </div>
