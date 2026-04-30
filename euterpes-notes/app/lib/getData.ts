@@ -69,16 +69,26 @@ export async function getProfile(identifier: string) {
 }
 
 export async function updateProfile(userId: string, updates: { display_name?: string, bio?: string }) {
-    const { data, error } = await supabase
+    console.log("Attempting update for:", userId, "with data:", updates);
+
+    const { data, error, status } = await supabase
         .from('profile')
         .update(updates)
-        .eq('user_id', userId); //The 'eq' ensures they can only edit their own ID
+        .eq('user_id', userId)
+        .select(); // Adding .select() lets us see the result of the update
 
     if (error) {
-        console.error("Error updating profile:", error.message);
+        console.error("Supabase Error:", error.message, "Status:", status);
         return { success: false, error };
     }
-    return { success: true, data };
+
+    if (!data || data.length === 0) {
+        console.warn("Update successful but 0 rows affected. Check RLS or User ID.");
+        return { success: false, error: "No rows updated" };
+    }
+
+    console.log("Update successful! New data:", data[0]);
+    return { success: true, data: data[0] };
 }
 //calls get requests for each individual post. should swap this to a batch fetch method later.
 //pagination would give us the page system rather than an infinite scroll.
