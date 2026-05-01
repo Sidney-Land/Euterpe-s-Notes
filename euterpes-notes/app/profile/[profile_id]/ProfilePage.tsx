@@ -7,10 +7,11 @@ import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile } fr
 import { supabase } from "../../lib/supabaseClient"
 
 interface ProfilePageProps extends React.PropsWithChildren {
-  profileId: string;
+  profileId: string,
+  postsCount: number;
 }
 
-export default function ProfilePage({ profileId, children }: ProfilePageProps) {
+export default function ProfilePage({ profileId, postsCount, children }: ProfilePageProps) {
   // Makes sidebar visible
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -247,7 +248,7 @@ export default function ProfilePage({ profileId, children }: ProfilePageProps) {
               {/* Stats */}
               <div className="flex space-x-16 text-center">
                 <div>
-                  <p className="font-semibold text-lg">0</p>
+                  <p className="font-semibold text-lg">{postsCount}</p>
                   <p className="text-gray-400">Posts</p>
                 </div>
                 <div>

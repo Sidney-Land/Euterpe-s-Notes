@@ -15,7 +15,7 @@ export default async function ProfileRoutePage({ params }: ProfileRoutePageProps
   const posts = await getMyPostIds(profileId);
 
   return (
-    <ProfilePage profileId={profileId}>
+    <ProfilePage profileId={profileId} postsCount={posts.length}>
       <Suspense fallback={<div>Loading your feed...</div>}>
         <div>
           {/* 2. Map through the supabase results */}
