@@ -1,17 +1,17 @@
 "use client";
 
-import { ChangeEvent, useRef, useState, useEffect } from "react";
+import { ChangeEvent, useRef, useState, useEffect, Children } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
 import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile, updateProfile } from "../../lib/getData";
 import { supabase } from '../../lib/supabaseClient';
 import { getImageUrl, uploadImage }from '../../lib/storage';
 
-interface ProfilePageProps {
+interface ProfilePageProps extends React.PropsWithChildren {
   profileId: string;
 }
 
-export default function ProfilePage({ profileId }: ProfilePageProps) {
+export default function ProfilePage({ profileId, children }: ProfilePageProps) {
   // Makes sidebar visible
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -324,10 +324,8 @@ const onImageSelected = async (
         {/* Divider */}
         <div className="mt-6 border-t"></div>
 
-        {/* Posts Section */}
-        <div className="flex h-96 items-center justify-center">
-          <p className="text-lg text-gray-400">No Posts Yet</p>
-        </div>
+        {/* Posts Section, defined in the page.tsx */}
+        {children}
       </div>
 
       {/* Dims profile page when edit is open */}
