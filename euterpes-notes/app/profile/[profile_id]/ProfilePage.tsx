@@ -106,25 +106,20 @@ useEffect(() => {
   };
 
   const saveName = async () => {
-    const nextName = draftName.trim();
-    if (nextName.length > 0 && userUUID) {
-      const { success } = await updateProfile(userUUID, { display_name: nextName });
-      if (success) {
-        setDisplayName(nextName);
-        setActiveEditor(null);
-        // RELOAD to the new URL so the page doesn't break on refresh
-        window.location.href = `/profile/${encodeURIComponent(nextName)}`;
-      }
-    }
+    const nextName = draftName.trim().length > 0 ? draftName.trim() : "User123";
+
+    setDisplayName(nextName);
+
     setActiveEditor(null);
 
     storeName(nextName);
   };
 
   const saveBio = async () => {
-    console.log("bio update started")
-    const nextBio = draftBio.trim();
-    setBio(nextBio.length > 0 ? nextBio : "No bio yet");
+    const nextBio = draftBio.trim().length > 0 ? draftBio.trim() : "No bio yet";
+
+    setBio(nextBio);
+
     setActiveEditor(null);
 
     storeBio(nextBio);
