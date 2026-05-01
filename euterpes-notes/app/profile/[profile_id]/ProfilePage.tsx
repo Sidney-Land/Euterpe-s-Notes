@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState, useEffect, Children } from "react";
+import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
 import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile, updateProfile } from "../../lib/getData";
@@ -190,19 +190,15 @@ const onImageSelected = async (
 
   try {
     const publicUrl = await uploadImage(userUUID, file, type);
+
+   if (type === 'avatar') {
+    setProfileImage(publicUrl);
+   } else {
+    setHeaderImage(publicUrl);
+   }
+
+   alert("Succesfully uploaded image, it may take a minute or 2 to see changes.");  
     
-    // Create the update object based on the type
-    const updates = type === 'avatar' 
-      ? { avatar_url: publicUrl } 
-      : { banner_url: publicUrl };
-
-    // Now updateProfile will accept this object
-    const { success } = await updateProfile(userUUID, updates);
-
-    if (success) {
-      if (type === 'avatar') setProfileImage(publicUrl);
-      else setHeaderImage(publicUrl);
-    }
   } catch (err: any) {
     console.error("Upload error:", err);
     alert(err.message || "Failed to upload image");
