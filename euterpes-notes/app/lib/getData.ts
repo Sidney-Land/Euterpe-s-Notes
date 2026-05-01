@@ -187,7 +187,27 @@ export async function getFollowedList(user_id: string) {
     if(error) {
 
         console.error("Error fetching followed list: ", error);
-        return null;
+        return [];
+    }
+
+    return data;
+}
+
+export async function getFollowedPostIds(user_id: string) {
+
+    const follow_ids = await getFollowedList(user_id);
+    const followIds = follow_ids.map(a => a.followed_id);
+
+    const {data, error} = await supabase
+        .from('post')
+        .select('post_id')
+        .in('poster_id', followIds)
+        .order('timestamp', { ascending: false })
+
+    if(error) {
+
+        console.error("Error fetching followed post IDs: ", error);
+        return [];
     }
 
     return data;

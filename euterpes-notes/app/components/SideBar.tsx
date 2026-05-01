@@ -84,7 +84,7 @@ const SideBar = ({ mode = 'home' }: SideBarProps) => {
         </Link>
       )}
 
-      <Link href="/" className="button">
+      <Link href="/" className="button" style={{ marginBottom: '10px' }}>
         Recent Posts
       </Link>
 
@@ -92,6 +92,11 @@ const SideBar = ({ mode = 'home' }: SideBarProps) => {
       {handle && (
         <Link href="/note" className="button" style={{ marginBottom: '10px' }}>
           Create Post
+        </Link>
+      )}
+      {handle && (
+        <Link href={`/follow/${encodeURIComponent(handle)}`} className="button" style={{ marginBottom: '10px' }}>
+          Followed Feed
         </Link>
       )}
     </div>
