@@ -170,6 +170,7 @@ useEffect(() => {
       .from('following')
       .delete()
       .eq('user_id', viewerUUID)
+      .eq('followed_id', userUUID)
 
     if (error) {
       console.error("Error unfollowing profile:", error);
