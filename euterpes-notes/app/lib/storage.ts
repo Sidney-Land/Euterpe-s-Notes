@@ -8,7 +8,7 @@ export async function uploadImage(userId: string, file: File, type: 'avatar' | '
   }
 
   // Optional addition to the uploadImage function
-    async function cleanFolder(userId: string, type: 'avatar' | 'banner') {
+  async function cleanFolder(userId: string, type: 'avatar' | 'banner') {
     const { data } = await supabase.storage.from('profile_images').list(userId);
     if (data) {
         const filesToDelete = data
@@ -19,7 +19,7 @@ export async function uploadImage(userId: string, file: File, type: 'avatar' | '
         await supabase.storage.from('profile_images').remove(filesToDelete);
         }
     }
-    }
+  }
 
   const fileExt = file.name.split('.').pop();
   const filePath = `${userId}/${type}.${fileExt}`;
@@ -43,7 +43,7 @@ export async function uploadImage(userId: string, file: File, type: 'avatar' | '
 }
 
 export async function getImageUrl(userId: string, type: 'avatar' | 'banner') {
-  const { data, error } = await supabase.storage.from('profile_images').list(userId);
+  const { data, error } = await supabase.storage.from('profile_images').list(userId, {sortBy: { column: 'updated_at', order: 'desc' }});
   if (error || !data) return null;
 
   const file = data.find(f => f.name.startsWith(type));
