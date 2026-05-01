@@ -122,7 +122,6 @@ const TitleBar = (props: TitleBarProp) => {
 
 
 
-        <a className = "button" href= ''>Search</a>
 
 
 
