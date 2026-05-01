@@ -8,10 +8,11 @@ import { supabase } from '../../lib/supabaseClient';
 import { getImageUrl, uploadImage }from '../../lib/storage';
 
 interface ProfilePageProps extends React.PropsWithChildren {
-  profileId: string;
+  profileId: string,
+  postsCount: number;
 }
 
-export default function ProfilePage({ profileId, children }: ProfilePageProps) {
+export default function ProfilePage({ profileId, postsCount, children }: ProfilePageProps) {
   // Makes sidebar visible
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -276,7 +277,7 @@ const onImageSelected = async (
               {/* Stats */}
               <div className="flex space-x-16 text-center">
                 <div>
-                  <p className="font-semibold text-lg">0</p>
+                  <p className="font-semibold text-lg">{postsCount}</p>
                   <p className="text-gray-400">Posts</p>
                 </div>
                 <div>
