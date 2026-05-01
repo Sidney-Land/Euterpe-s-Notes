@@ -3,7 +3,7 @@
 import { ChangeEvent, useRef, useState, useEffect } from "react";
 import SideBar from "../../components/SideBar";
 import TitleBar from "../../components/TitleBar";
-import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile, updateProfile } from "../../lib/getData";
+import { getFollowingCount, getFollowerCount, getFollowedStatus, getProfile } from "../../lib/getData";
 import { supabase } from '../../lib/supabaseClient';
 import { getImageUrl, uploadImage }from '../../lib/storage';
 
